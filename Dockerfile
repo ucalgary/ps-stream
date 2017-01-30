@@ -5,7 +5,8 @@ WORKDIR /usr/src/app
 
 COPY requirements.txt /usr/src/app
 RUN apk add --no-cache --virtual .build-deps \
-      gcc && \
+      gcc \
+      musl-dev && \
     pip install -r requirements.txt && \
 		apk del .build-deps
 
