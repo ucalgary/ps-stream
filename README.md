@@ -4,9 +4,9 @@
 
 There are two major commands in `pssync`.
 
-`**collect**` accepts sync messages from PeopleSoft applications over http or https and stores them in Kafka topics by message name.
+**`collect`** accepts sync messages from PeopleSoft applications over http or https and stores them in Kafka topics by message name.
 
-`**parse**` consumes sync messages from one or more Kafka topics, and generates new Kafka topics with `KTable` semantics. Each record in the resulting stream is oriented to reflect records whose record key is the primary key or identifier of the record.
+**`parse`** consumes sync messages from one or more Kafka topics, and generates new Kafka topics with `KTable` semantics. Each record in the resulting stream is oriented to reflect records whose record key is the primary key or identifier of the record.
 
 ## Running a pssync container
 
