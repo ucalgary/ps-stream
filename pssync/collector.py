@@ -30,6 +30,7 @@ class PSSyncCommand(object):
 	Commands:
 	  collect            Collect PeopleSoft sync messages
 	  config             Validate and view the collector config
+	  parse              Parse sync message streams into record streams
 	"""
 
 	def collect(self, options, command_options):
@@ -45,9 +46,17 @@ class PSSyncCommand(object):
 
 	def config(self, options, command_options):
 		"""
-		Validate and view the collector config
+		Validate and view the collector config.
 
 		Usage: config
+		"""
+		pass
+
+	def parse(self, options, command_options):
+		"""
+		Parse sync message streams into record streams.
+
+		Usage: parse
 		"""
 		pass
 
