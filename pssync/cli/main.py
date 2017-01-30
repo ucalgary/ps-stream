@@ -4,7 +4,9 @@ import sys
 
 from docopt import docopt
 from inspect import getdoc
-from twisted.internet import reactor, endpoints
+from twisted.internet import endpoints
+from twisted.internet import reactor
+from twisted.web import server
 
 from ..collector import PSSyncCollector
 from .docopt_command import DocoptDispatcher
