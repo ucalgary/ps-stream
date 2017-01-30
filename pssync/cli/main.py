@@ -67,8 +67,7 @@ class PSSyncCommand(object):
 	"""
 
 	def collect(self, options, command_options):
-		"""
-		Collect PeopleSoft sync and fullsync messages.
+		"""Collect PeopleSoft sync and fullsync messages.
 
 		Usage: collect [ARGS...]
 
@@ -86,16 +85,14 @@ class PSSyncCommand(object):
 		reactor.run()
 
 	def config(self, options, command_options):
-		"""
-		Validate and view the collector config.
+		"""Validate and view the collector config.
 
 		Usage: config
 		"""
 		pass
 
 	def parse(self, options, command_options):
-		"""
-		Parse sync message streams into record streams.
+		"""Parse sync message streams into record streams.
 
 		Usage: parse [ARGS...]
 
