@@ -11,7 +11,7 @@ RUN apk add --no-cache --virtual .build-deps \
 		apk del .build-deps
 
 COPY setup.py /usr/src/app
-COPY pssync /usr/src/app/
+COPY pssync /usr/src/app/pssync
 RUN python setup.py install
 
 LABEL maintainer King Chung Huang <kchuang@ucalgary.ca>
