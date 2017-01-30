@@ -38,9 +38,6 @@ class PSSyncCommand(object):
 
 		Usage: collect
 		"""
-		log.info('collect')
-		log.info(options)
-
 		site = server.Site(PSSyncCollector())
 		endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
 		endpoint.listen(site)
@@ -52,8 +49,7 @@ class PSSyncCommand(object):
 
 		Usage: config
 		"""
-		log.info('config')
-		log.info(options)
+		pass
 
 
 class PSSyncCollector(resource.Resource):
