@@ -2,7 +2,7 @@ from twisted.internet import reactor, endpoints
 from twisted.web import resource, server
 
 
-class PSSyncReceiver(resource.Resource):
+class PSSyncCollector(resource.Resource):
 
 	isLeaf = True
 
@@ -10,11 +10,13 @@ class PSSyncReceiver(resource.Resource):
 		return '{"status":"GET ok"}'.encode('utf-8')
 
 	def render_POST(self, request):
+		print(request.getAllHeaders())
+		print(request.content.read())
 		return '{"status":"POST ok"}'.encode('utf-8')
 
 
 if __name__ == '__main__':
-	site = server.Site(PSSyncReceiver())
+	site = server.Site(PSSyncCollector())
 	endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
 	endpoint.listen(site)
 	reactor.run()
