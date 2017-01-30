@@ -40,10 +40,6 @@ class DocoptDispatcher(object):
 
 def get_handler(command_class, command):
 	command = command.replace('-', '_')
-	# we certainly want to have "exec" command, since that's what docker client has
-	# but in python exec is a keyword
-	if command == "exec":
-		command = "exec_command"
 
 	if not hasattr(command_class, command):
 		raise NoSuchCommand(command, command_class)
