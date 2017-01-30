@@ -69,7 +69,7 @@ class PSSyncCommand(object):
 	def collect(self, options, command_options):
 		"""Collect PeopleSoft sync and fullsync messages.
 
-		Usage: collect [ARGS...]
+		Usage: collect [options]
 
 		Options:
 		  --port PORT                Port to listen to messages on (default: 8000)
@@ -94,7 +94,7 @@ class PSSyncCommand(object):
 	def parse(self, options, command_options):
 		"""Parse sync message streams into record streams.
 
-		Usage: parse [ARGS...]
+		Usage: parse [options]
 
 		Options:
 		  --source-topic NAME        Topic to consume sync messages from
