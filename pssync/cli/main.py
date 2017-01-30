@@ -68,7 +68,15 @@ class PSSyncCommand(object):
 		"""
 		Collect PeopleSoft sync and fullsync messages.
 
-		Usage: collect
+		Usage: collect [ARGS...]
+
+		Options:
+		  --port PORT                Port to listen to messages on (default: 8000)
+		  --sender-name NAMES        Accepted values for the From header
+		  --recipient-name NAMES     Accepted values for the To header
+		  --message-name NAMES       Accepted values for the MessageName header
+		  --mode MODE                Produce to a single Kafka topic or multiple topics
+		                             based on message name
 		"""
 		site = server.Site(PSSyncCollector())
 		endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
