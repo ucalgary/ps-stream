@@ -1,7 +1,15 @@
+#!/usr/bin/env python3
+
+import functools
 import logging
+import sys
+
+from docopt import docopt
+from inspect import getdoc
 from twisted.internet import reactor, endpoints
 from twisted.web import resource, server
 
+from .cli.docopt_command import DocoptDispatcher, NoSuchCommand
 
 
 log = logging.getLogger(__name__)
@@ -62,10 +70,36 @@ class PSSyncCollector(resource.Resource):
 
 
 def main():
-	site = server.Site(PSSyncCollector())
-	endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
-	endpoint.listen(site)
-	reactor.run()
+	command = dispatch()
+
+	try:
+		command()
+	except (KeyboardInterrupt, signals.ShutdownException):
+		log.error('Aborting.')
+		sys.exit(1)
+	except:
+		sys.exit(1)
+
+
+def dispatch():
+	dispatcher = DocoptDispatcher(
+		PSSyncCommand,
+		{'options_first': True})
+
+	try:
+		options, handler, command_options = dispatcher.parse(sys.argv[1:])
+	except NoSuchCommand as e:
+		commands = '\n'.join(parse_doc_section('commands:', getdoc(e.supercommand)))
+		log.error('No such command: %s\n\n%s', e.command, commands)
+		sys.exit(1)
+
+	return functools.partial(perform_command, options, handler, command_options)
+
+
+def perform_command(options, handler, command_options):
+	command = PSSyncCommand()
+	handler(command, command_options)
+
 
 if __name__ == '__main__':
 	main()
