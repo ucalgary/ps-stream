@@ -15,8 +15,11 @@ class PSSyncCollector(resource.Resource):
 		return '{"status":"POST ok"}'.encode('utf-8')
 
 
-if __name__ == '__main__':
+def main():
 	site = server.Site(PSSyncCollector())
 	endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
 	endpoint.listen(site)
 	reactor.run()
+
+if __name__ == '__main__':
+	main()
