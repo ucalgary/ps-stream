@@ -32,7 +32,7 @@ class PSSyncCommand(object):
 	  config             Validate and view the collector config
 	"""
 
-	def collect(self, options):
+	def collect(self, options, command_options):
 		"""
 		Collect PeopleSoft sync and fullsync messages.
 
@@ -43,7 +43,7 @@ class PSSyncCommand(object):
 		endpoint.listen(site)
 		reactor.run()
 
-	def config(self, options):
+	def config(self, options, command_options):
 		"""
 		Validate and view the collector config
 
@@ -94,7 +94,7 @@ def dispatch():
 
 def perform_command(options, handler, command_options):
 	command = PSSyncCommand()
-	handler(command, command_options)
+	handler(command, options, command_options)
 
 
 if __name__ == '__main__':
