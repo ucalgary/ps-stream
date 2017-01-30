@@ -95,6 +95,11 @@ class PSSyncCommand(object):
 		"""
 		Parse sync message streams into record streams.
 
-		Usage: parse
+		Usage: parse [ARGS...]
+
+		Options:
+		  --source-topic NAME        Topic to consume sync messages from
+		  --destination-topic NAME   Topic to produce record messages to, defaults
+		                             to a topic based on the consumed message name
 		"""
 		pass
