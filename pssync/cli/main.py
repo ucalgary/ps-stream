@@ -4,7 +4,9 @@ import sys
 
 from docopt import docopt
 from inspect import getdoc
-from twisted.internet import reactor, endpoints
+from twisted.internet import endpoints
+from twisted.internet import reactor
+from twisted.web import server
 
 from ..collector import PSSyncCollector
 from .docopt_command import DocoptDispatcher
@@ -65,10 +67,17 @@ class PSSyncCommand(object):
 	"""
 
 	def collect(self, options, command_options):
-		"""
-		Collect PeopleSoft sync and fullsync messages.
+		"""Collect PeopleSoft sync and fullsync messages.
 
-		Usage: collect
+		Usage: collect [options]
+
+		Options:
+		  --port PORT                Port to listen to messages on (default: 8000)
+		  --sender-name NAMES        Accepted values for the From header
+		  --recipient-name NAMES     Accepted values for the To header
+		  --message-name NAMES       Accepted values for the MessageName header
+		  --mode MODE                Produce to a single Kafka topic or multiple topics
+		                             based on message name
 		"""
 		site = server.Site(PSSyncCollector())
 		endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
@@ -76,17 +85,20 @@ class PSSyncCommand(object):
 		reactor.run()
 
 	def config(self, options, command_options):
-		"""
-		Validate and view the collector config.
+		"""Validate and view the collector config.
 
 		Usage: config
 		"""
 		pass
 
 	def parse(self, options, command_options):
-		"""
-		Parse sync message streams into record streams.
+		"""Parse sync message streams into record streams.
 
-		Usage: parse
+		Usage: parse [options]
+
+		Options:
+		  --source-topic NAME        Topic to consume sync messages from
+		  --destination-topic NAME   Topic to produce record messages to, defaults
+		                             to a topic based on the consumed message name
 		"""
 		pass

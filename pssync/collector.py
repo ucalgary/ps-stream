@@ -1,4 +1,4 @@
-from twisted.web import resource, server
+from twisted.web import resource
 
 
 class PSSyncCollector(resource.Resource):
