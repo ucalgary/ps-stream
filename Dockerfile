@@ -17,4 +17,5 @@ RUN python setup.py install
 ENTRYPOINT ["/usr/local/bin/pssync"]
 CMD ["--help"]
 
-LABEL maintainer King Chung Huang <kchuang@ucalgary.ca>
+LABEL maintainer="King Chung Huang <kchuang@ucalgary.ca>" \
+      org.label-schema.vcs-url="https://github.com/ucalgary/ps-sync-kafka"
