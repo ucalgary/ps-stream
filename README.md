@@ -1,5 +1,7 @@
 # Process PeopleSoft Sync Messages into Kafka Topics
 
+[![](https://images.microbadger.com/badges/image/ucalgary/ps-sync-kafka.svg)](https://microbadger.com/images/ucalgary/ps-sync-kafka)
+
 `pssync` is a Python utility that collects and and parses PeopleSoft sync and fullsync messages into Kafka topics. PeopleSoft sync processes are normally used to sync data between PeopleSoft applications. However, they can also be used as a way to generate an externalized stream of PeopleSoft objects in streaming data pipelines.
 
 There are two major commands in `pssync`.
