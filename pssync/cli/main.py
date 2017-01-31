@@ -76,9 +76,11 @@ class PSSyncCommand(object):
 		  --sender-name NAMES        Accepted values for the From header
 		  --recipient-name NAMES     Accepted values for the To header
 		  --message-name NAMES       Accepted values for the MessageName header
-		  --mode MODE                Produce to a single Kafka topic or multiple topics
-		                             based on message name
+		  --producer-topic TOPIC     Produce to a specific Kafka topic, otherwise
+		                             messages are produced to topics by message name
 		"""
+		
+
 		site = server.Site(PSSyncCollector())
 		endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
 		endpoint.listen(site)
