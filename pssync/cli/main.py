@@ -56,9 +56,9 @@ class PSSyncCommand(object):
 	  pssync -h|--help
 
 	Options:
-	  -b, --broker BROKER_HOSTS     Comma-separated list of Kafka broker hosts [default: kafka:9092]
-	  -r, --registry REGISTRY_HOST  URL of the service where Avro schemas are registered
-	  -z, --zookeeper HOST          Zookeeper host [default: zookeeper:2181]
+	  -z, --zookeeper HOST          Zookeeper service discoveryhost [default: zookeeper:2181]
+	  -k, --kafka HOSTS             Kafka broker hosts, in lieu of zookeeper [default: kafka:9092]
+	  -r, --schema-registry URL     Avro schema registry host [default: schema-registry:80]
 	  -p, --topic-prefix PREFIX     String to prepend to all topic names
 
 	Commands:
@@ -78,7 +78,7 @@ class PSSyncCommand(object):
 		  --recipient-name NAMES     Accepted values for the To header
 		  --message-name NAMES       Accepted values for the MessageName header
 		  --producer-topic TOPIC     Produce to a specific Kafka topic, otherwise
-		                             messages are produced to topics by message name
+		                             messages are sent to topics by message name
 		"""
 		
 
