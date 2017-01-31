@@ -72,7 +72,7 @@ class PSSyncCommand(object):
 		Usage: collect [options]
 
 		Options:
-		  --port PORT                Port to listen to messages on (default: 8000)
+		  --port PORT                Port to listen to messages on [default: 8000]
 		  --sender-name NAMES        Accepted values for the From header
 		  --recipient-name NAMES     Accepted values for the To header
 		  --message-name NAMES       Accepted values for the MessageName header
