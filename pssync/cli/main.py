@@ -58,6 +58,7 @@ class PSSyncCommand(object):
 	Options:
 	  -b, --broker BROKER_HOSTS     Comma-separated list of Kafka broker hosts [default: kafka:9092]
 	  -r, --registry REGISTRY_HOST  URL of the service where Avro schemas are registered
+	  -z, --zookeeper HOST          Zookeeper host [default: zookeeper:2181]
 	  -p, --topic-prefix PREFIX     String to prepend to all topic names
 
 	Commands:
