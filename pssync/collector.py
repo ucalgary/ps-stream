@@ -34,6 +34,13 @@ class PSSyncCollector(resource.Resource):
                 field_types = element_to_obj(e, value_f=field_type)
                 break
 
+        # Rescan for transactions, removing read elements to reduce memory usage
+        request.content.seek(0,0)
+        for event, e in ElementTree.iterparse(request.content, events=('end',)):
+            if e.tag == 'Transaction':
+                print(json.dumps(element_to_obj(e), indent=4))
+                e.clear()
+
         return '{"status":"POST ok"}'.encode('utf-8')
 
 
