@@ -83,8 +83,8 @@ class PSSyncCommand(object):
           --topic TOPIC         Produce to a specific Kafka topic, otherwise
                                 messages are sent to topics by message name
         """
-        bootstraps = kafka_bootstraps_from_options(options)
-        producer = Producer({'bootstrap.servers': bootstraps})
+        config = kafka_config_from_options(options)
+        producer = Producer(config)
 
         collector.collect(
           producer,
@@ -115,5 +115,7 @@ class PSSyncCommand(object):
         pass
 
 
-def kafka_bootstraps_from_options(options):
-  return ','.join(options['--kafka'])
+def kafka_config_from_options(options):
+  return {
+    'bootstrap.servers': ','.join(options['--kafka'])
+  }
