@@ -37,6 +37,10 @@ class PSSyncCollector(resource.Resource):
 
         psft_message_name = None
         field_types = None
+        
+        transaction_id = request.getHeader('TransactionID')
+        transaction_id_bytes = transaction_id.encode('utf-8')
+        orig_time_stamp = request.getHeader('OrigTimeStamp')
 
         # Parse the root element for the PeopleSoft message name and FieldTypes
         request.content.seek(0,0)
