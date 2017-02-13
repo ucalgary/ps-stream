@@ -18,6 +18,6 @@ class PSSyncCollector(resource.Resource):
 def collect(producer, topic=None, port=8000, senders=None, recipients=None, message_names=None):
     collector = PSSyncCollector()
     site = server.Site(collector)
-    endpoint = endpoints.TCP4ServerEndpoint(reactor, port)
+    endpoint = endpoints.TCP4ServerEndpoint(reactor, int(port))
     endpoint.listen(site)
     reactor.run()
