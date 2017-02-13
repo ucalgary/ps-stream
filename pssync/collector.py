@@ -9,6 +9,7 @@ from twisted.web import resource, server
 
 from .utils import element_to_obj
 
+
 class PSSyncCollector(resource.Resource):
 
     isLeaf = True
