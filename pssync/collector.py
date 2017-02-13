@@ -58,18 +58,12 @@ class PSSyncCollector(resource.Resource):
 
 
 def collect(producer, topic=None, port=8000, senders=None, recipients=None, message_names=None):
-    def header_in_list(request, key, values):
-        header = request.getHeader(key.encode('iso-8859-1'))
-        if header:
-            header = header.decode('iso-8859-1')
-        return header in values
-    
     def authorize_request(request):
-        if senders and not header_in_list(request, 'To', senders):
+        if senders and not request.getHeader('To') in senders:
             return False
-        if recipients and not header_in_list(request, 'From', recipients):
+        if recipients and not request.getHeader('From') in senders:
             return False
-        if message_names and not header_in_list(request, 'MessageName', message_names):
+        if message_names and request.getHeader('MessageName') in senders:
             return False
         return True
 
