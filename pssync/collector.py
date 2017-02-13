@@ -32,6 +32,9 @@ class PSSyncCollector(resource.Resource):
             request.setResponseCode(403, message='Forbidden')
             return 'Message not accepted by collector.'.encode('utf-8')
 
+        assert(request.getHeader('DataChunk') == '1'.encode('iso-8859-1'))
+        assert(request.getHeader('DataChunkCount') == '1'.encode('iso-8859-1'))
+
         psft_message_name = None
         field_types = None
 
