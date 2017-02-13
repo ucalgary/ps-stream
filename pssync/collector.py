@@ -1,5 +1,7 @@
 import json
+import pytz
 
+from datetime import datetime
 from xml.etree import ElementTree
 
 from twisted.internet import endpoints, reactor
@@ -52,11 +54,23 @@ class PSSyncCollector(resource.Resource):
                 break
 
         # Rescan for transactions, removing read elements to reduce memory usage
+        transaction_index = 1
         request.content.seek(0,0)
         for event, e in ElementTree.iterparse(request.content, events=('end',)):
             if e.tag == 'Transaction':
-                print(json.dumps(element_to_obj(e), indent=4))
+                transaction = element_to_obj(e, wrap_value=False)
+                message = {
+                    'TransactionID': transaction_id,
+                    'TransactionIndex' : transaction_index,
+                    'OrigTimeStamp': orig_time_stamp,
+                    'CollectTimeStamp': datetime.now(pytz.utc).astimezone().isoformat(),
+                    'Transaction': transaction
+                }
+                message_bytes = json.dumps(message).encode('utf-8')
+                self.producer.produce(self.topic, message_bytes, transaction_id_bytes)
                 e.clear()
+                transaction_index += 1
+        self.producer.flush()
 
         return '{"status":"POST ok"}'.encode('utf-8')
 
