@@ -11,6 +11,11 @@ class PSSyncCollector(resource.Resource):
 
     isLeaf = True
 
+    def __init__(self, producer, topic=None):
+        super().__init__()
+        self.producer = producer
+        self.topic = topic
+
     def render_GET(self, request):
         return '{"status":"GET ok"}'.encode('utf-8')
 
@@ -45,7 +50,7 @@ class PSSyncCollector(resource.Resource):
 
 
 def collect(producer, topic=None, port=8000, senders=None, recipients=None, message_names=None):
-    collector = PSSyncCollector()
+    collector = PSSyncCollector(producer, topic=topic)
     site = server.Site(collector)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, int(port))
     endpoint.listen(site)
