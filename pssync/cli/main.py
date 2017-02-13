@@ -73,12 +73,12 @@ class PSSyncCommand(object):
         Usage: collect [options]
 
         Options:
-          --port PORT                Port to listen to messages on [default: 8000]
-          --sender-name NAMES        Accepted values for the From header
-          --recipient-name NAMES     Accepted values for the To header
-          --message-name NAMES       Accepted values for the MessageName header
-          --producer-topic TOPIC     Produce to a specific Kafka topic, otherwise
-                                     messages are sent to topics by message name
+          --port PORT           Port to listen to messages on [default: 8000]
+          --senders NAMES       Accepted values for the From header
+          --recipients NAMES    Accepted values for the To header
+          --messages NAMES      Accepted values for the MessageName header
+          --topic TOPIC         Produce to a specific Kafka topic, otherwise
+                                messages are sent to topics by message name
         """
         
 
