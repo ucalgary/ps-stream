@@ -107,3 +107,7 @@ class PSSyncCommand(object):
                                      to a topic based on the consumed message name
         """
         pass
+
+
+def kafka_bootstraps_from_options(options):
+  return ','.join(options['--kafka'])
