@@ -2,13 +2,11 @@ import functools
 import logging
 import sys
 
+from confluent_kafka import Consumer, Producer
 from docopt import docopt
 from inspect import getdoc
-from twisted.internet import endpoints
-from twisted.internet import reactor
-from twisted.web import server
 
-from ..collector import PSSyncCollector
+from .. import collector
 from .docopt_command import DocoptDispatcher
 from .docopt_command import NoSuchCommand
 
@@ -72,7 +70,10 @@ class PSSyncCommand(object):
     def collect(self, options, command_options):
         """Collect PeopleSoft sync and fullsync messages.
 
-        Usage: collect [options]
+        Usage: collect [--port=<arg>] [--topic=<arg>]
+                       [--senders=<arg>]...
+                       [--recipients=<arg>]...
+                       [--messages=<arg>]...
 
         Options:
           --port PORT           Port to listen to messages on [default: 8000]
@@ -82,12 +83,17 @@ class PSSyncCommand(object):
           --topic TOPIC         Produce to a specific Kafka topic, otherwise
                                 messages are sent to topics by message name
         """
-        
+        bootstraps = kafka_bootstraps_from_options(options)
+        producer = Producer({'bootstrap.servers': bootstraps})
 
-        site = server.Site(PSSyncCollector())
-        endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
-        endpoint.listen(site)
-        reactor.run()
+        collector.collect(
+          producer,
+          topic=command_options['--topic'],
+          port=command_options['--port'],
+          senders=command_options['--senders'],
+          recipients=command_options['--recipients'],
+          message_names=command_options['--messages'])
+          
 
     def config(self, options, command_options):
         """Validate and view the collector config.
