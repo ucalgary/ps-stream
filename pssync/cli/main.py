@@ -89,7 +89,7 @@ class PSSyncCommand(object):
         collector.collect(
           producer,
           topic=command_options['--topic'],
-          port=command_options['--port'],
+          port=int(command_options['--port']),
           senders=command_options['--senders'],
           recipients=command_options['--recipients'],
           message_names=command_options['--messages'])
