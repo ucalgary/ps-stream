@@ -11,10 +11,11 @@ class PSSyncCollector(resource.Resource):
 
     isLeaf = True
 
-    def __init__(self, producer, topic=None):
+    def __init__(self, producer, topic=None, authorize_f=None):
         super().__init__()
         self.producer = producer
         self.topic = topic
+        self.authorize_f = authorize_f
 
     def render_GET(self, request):
         return '{"status":"GET ok"}'.encode('utf-8')
@@ -27,6 +28,10 @@ class PSSyncCollector(resource.Resource):
         The following URL describes the PeopleSoft Rowset-Based Message Format.
         http://docs.oracle.com/cd/E66686_01/pt855pbr1/eng/pt/tibr/concept_PeopleSoftRowset-BasedMessageFormat-0764fb.html
         """
+        if self.authorize_f and not self.authorize_f(request):
+            request.setResponseCode(403, message='Forbidden')
+            return 'Message not accepted by collector.'.encode('utf-8')
+
         psft_message_name = None
         field_types = None
 
