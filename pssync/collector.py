@@ -12,3 +12,11 @@ class PSSyncCollector(resource.Resource):
         print(request.getAllHeaders())
         print(request.content.read())
         return '{"status":"POST ok"}'.encode('utf-8')
+
+
+def collect(producer, topic=None, port=8000, senders=None, recipients=None, message_names=None):
+    collector = PSSyncCollector()
+    site = server.Site(collector)
+    endpoint = endpoints.TCP4ServerEndpoint(reactor, port)
+    endpoint.listen(site)
+    reactor.run()
