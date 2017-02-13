@@ -52,13 +52,15 @@ class PSSyncCommand(object):
     """Process PeopleSoft sync messages into Kafka topics.
 
     Usage:
-      pssync [options] [COMMAND] [ARGS...]
+      pssync [--kafka=<arg>]... [--schema-registry=<arg>]
+             [--zookeeper=<arg>] [--topic-prefix=<arg>]
+             [COMMAND] [ARGS...]
       pssync -h|--help
 
     Options:
-      -z, --zookeeper HOST          Zookeeper service discoveryhost [default: zookeeper:2181]
-      -k, --kafka HOSTS             Kafka broker hosts, in lieu of zookeeper [default: kafka:9092]
+      -k, --kafka HOSTS             Kafka brokers [default: kafka:9092]
       -r, --schema-registry URL     Avro schema registry host [default: schema-registry:80]
+      -z, --zookeeper HOST          Zookeeper host [default: zookeeper:2181]
       -p, --topic-prefix PREFIX     String to prepend to all topic names
 
     Commands:
