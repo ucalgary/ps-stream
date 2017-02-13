@@ -2,13 +2,11 @@ import functools
 import logging
 import sys
 
+from confluent_kafka import Consumer, Producer
 from docopt import docopt
 from inspect import getdoc
-from twisted.internet import endpoints
-from twisted.internet import reactor
-from twisted.web import server
 
-from ..collector import PSSyncCollector
+from .. import collector
 from .docopt_command import DocoptDispatcher
 from .docopt_command import NoSuchCommand
 
@@ -17,88 +15,106 @@ log = logging.getLogger(__name__)
 
 
 def main():
-	command = dispatch()
+    command = dispatch()
 
-	try:
-		command()
-	except (KeyboardInterrupt, signals.ShutdownException):
-		log.error('Aborting.')
-		sys.exit(1)
-	except:
-		sys.exit(1)
+    try:
+        command()
+    except (KeyboardInterrupt, signals.ShutdownException):
+        log.error('Aborting.')
+        sys.exit(1)
+    except:
+        sys.exit(1)
 
 
 def dispatch():
-	dispatcher = DocoptDispatcher(
-		PSSyncCommand,
-		{'options_first': True})
+    dispatcher = DocoptDispatcher(
+        PSSyncCommand,
+        {'options_first': True})
 
-	try:
-		options, handler, command_options = dispatcher.parse(sys.argv[1:])
-	except NoSuchCommand as e:
-		commands = '\n'.join(parse_doc_section('commands:', getdoc(e.supercommand)))
-		log.error('No such command: %s\n\n%s', e.command, commands)
-		sys.exit(1)
+    try:
+        options, handler, command_options = dispatcher.parse(sys.argv[1:])
+    except NoSuchCommand as e:
+        commands = '\n'.join(parse_doc_section('commands:', getdoc(e.supercommand)))
+        log.error('No such command: %s\n\n%s', e.command, commands)
+        sys.exit(1)
 
-	return functools.partial(perform_command, options, handler, command_options)
+    return functools.partial(perform_command, options, handler, command_options)
 
 
 def perform_command(options, handler, command_options):
-	command = PSSyncCommand()
-	handler(command, options, command_options)
+    command = PSSyncCommand()
+    handler(command, options, command_options)
 
 
 class PSSyncCommand(object):
-	"""Process PeopleSoft sync messages into Kafka topics.
+    """Process PeopleSoft sync messages into Kafka topics.
 
-	Usage:
-	  pssync [options] [COMMAND] [ARGS...]
-	  pssync -h|--help
+    Usage:
+      pssync [--kafka=<arg>]... [--schema-registry=<arg>]
+             [--zookeeper=<arg>] [--topic-prefix=<arg>]
+             [COMMAND] [ARGS...]
+      pssync -h|--help
 
-	Options:
-	  -b, --broker BROKER_HOSTS     Comma-separated list of Kafka broker hosts (default: kafka:9092)
-	  -r, --registry REGISTRY_HOST  URL of the service where Avro schemas are registered
-	  -p, --topic-prefix PREFIX     String to prepend to all topic names
+    Options:
+      -k, --kafka HOSTS             Kafka brokers [default: kafka:9092]
+      -r, --schema-registry URL     Avro schema registry host [default: http://schema-registry:80]
+      -p, --topic-prefix PREFIX     String to prepend to all topic names
 
-	Commands:
-	  collect            Collect PeopleSoft sync messages
-	  config             Validate and view the collector config
-	  parse              Parse sync message streams into record streams
-	"""
+    Commands:
+      collect            Collect PeopleSoft sync messages
+      config             Validate and view the collector config
+      parse              Parse sync message streams into record streams
+    """
 
-	def collect(self, options, command_options):
-		"""Collect PeopleSoft sync and fullsync messages.
+    def collect(self, options, command_options):
+        """Collect PeopleSoft sync and fullsync messages.
 
-		Usage: collect [options]
+        Usage: collect [--port=<arg>] [--topic=<arg>]
+                       [--senders=<arg>]...
+                       [--recipients=<arg>]...
+                       [--messages=<arg>]...
 
-		Options:
-		  --port PORT                Port to listen to messages on (default: 8000)
-		  --sender-name NAMES        Accepted values for the From header
-		  --recipient-name NAMES     Accepted values for the To header
-		  --message-name NAMES       Accepted values for the MessageName header
-		  --mode MODE                Produce to a single Kafka topic or multiple topics
-		                             based on message name
-		"""
-		site = server.Site(PSSyncCollector())
-		endpoint = endpoints.TCP4ServerEndpoint(reactor, 8080)
-		endpoint.listen(site)
-		reactor.run()
+        Options:
+          --port PORT           Port to listen to messages on [default: 8000]
+          --senders NAMES       Accepted values for the From header
+          --recipients NAMES    Accepted values for the To header
+          --messages NAMES      Accepted values for the MessageName header
+          --topic TOPIC         Produce to a specific Kafka topic, otherwise
+                                messages are sent to topics by message name
+        """
+        config = kafka_config_from_options(options)
+        producer = Producer(config)
 
-	def config(self, options, command_options):
-		"""Validate and view the collector config.
+        collector.collect(
+          producer,
+          topic=command_options['--topic'],
+          port=int(command_options['--port']),
+          senders=command_options['--senders'],
+          recipients=command_options['--recipients'],
+          message_names=command_options['--messages'])
+          
 
-		Usage: config
-		"""
-		pass
+    def config(self, options, command_options):
+        """Validate and view the collector config.
 
-	def parse(self, options, command_options):
-		"""Parse sync message streams into record streams.
+        Usage: config
+        """
+        pass
 
-		Usage: parse [options]
+    def parse(self, options, command_options):
+        """Parse sync message streams into record streams.
 
-		Options:
-		  --source-topic NAME        Topic to consume sync messages from
-		  --destination-topic NAME   Topic to produce record messages to, defaults
-		                             to a topic based on the consumed message name
-		"""
-		pass
+        Usage: parse [options]
+
+        Options:
+          --source-topic NAME        Topic to consume sync messages from
+          --destination-topic NAME   Topic to produce record messages to, defaults
+                                     to a topic based on the consumed message name
+        """
+        pass
+
+
+def kafka_config_from_options(options):
+  return {
+    'bootstrap.servers': ','.join(options['--kafka'])
+  }
