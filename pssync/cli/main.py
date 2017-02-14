@@ -105,10 +105,11 @@ class PSSyncCommand(object):
     def publish(self, options, command_options):
         """Parse transaction messages into record streams.
 
-        Usage: publish [options]
+        Usage: publish [--source-topic=<arg>]...
+                       [--destination-topic=<arg>]
 
         Options:
-          --source-topic NAME        Topic to consume sync messages from
+          --source-topic NAME        Topics to consume sync messages from
           --destination-topic NAME   Topic to produce record messages to, defaults
                                      to a topic based on the consumed message name
         """
@@ -119,7 +120,7 @@ class PSSyncCommand(object):
         publisher.publish(
           consumer,
           producer,
-          source_topic=command_options['--source-topic'],
+          source_topics=command_options['--source-topic'],
           destination_topic=command_options['--destination_topic'])
 
 
