@@ -121,7 +121,7 @@ class PSSyncCommand(object):
           consumer,
           producer,
           source_topics=command_options['--source-topic'],
-          destination_topic=command_options['--destination_topic'])
+          destination_topic=command_options['--destination-topic'])
 
 
 def kafka_config_from_options(options):
