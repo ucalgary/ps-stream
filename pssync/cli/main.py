@@ -7,6 +7,7 @@ from docopt import docopt
 from inspect import getdoc
 
 from .. import collector
+from .. import publisher
 from .docopt_command import DocoptDispatcher
 from .docopt_command import NoSuchCommand
 
@@ -111,7 +112,15 @@ class PSSyncCommand(object):
           --destination-topic NAME   Topic to produce record messages to, defaults
                                      to a topic based on the consumed message name
         """
-        pass
+        config = kafka_config_from_options(options)
+        consumer = Consumer(config)
+        producer = Producer(config)
+
+        publisher.publish(
+          consumer,
+          producer,
+          source_topic=command_options['--source-topic'],
+          destination_topic=command_options['--destination_topic'])
 
 
 def kafka_config_from_options(options):
