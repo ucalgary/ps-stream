@@ -112,6 +112,7 @@ class PSSyncCommand(object):
           --source-topic NAME        Topics to consume sync messages from
           --destination-topic NAME   Topic to produce record messages to, defaults
                                      to a topic based on the consumed message name
+          --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
         config = kafka_config_from_options(options)
         consumer = Consumer(config)
