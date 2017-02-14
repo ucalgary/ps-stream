@@ -41,7 +41,7 @@ class PSSyncPublisher(object):
         for record_type, record_data in transaction['Transaction'].items():
             if record_type == 'PSCAMA':
                 continue
-            topic = self.topic_for_record(record_type, record_data, default=self.destination_topic)
+            topic = self.topic_for_record(record_type, record_data)
             key = self.key_for_record(record_type, record_data)
             value = audit_actn in ('A', 'C') and record_data or None
             if key and key_serde:
@@ -50,8 +50,8 @@ class PSSyncPublisher(object):
                 value = value_serde(value)
             yield topic, key, value
 
-    def topic_for_record(self, record_type, record_data, default=None):
-        return default
+    def topic_for_record(self, record_type, record_data):
+        return self.destination_topic or record_type
 
     def key_for_record(self, record_type, record_data, default=None):
         return default
