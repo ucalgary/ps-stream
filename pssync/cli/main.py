@@ -125,7 +125,7 @@ class PSSyncCommand(object):
           destination_topic=command_options['--destination-topic'])
 
 
-def kafka_config_from_options(options):
   return {
     'bootstrap.servers': ','.join(options['--kafka'])
   }
+def kafka_config_from_options(options, command_options={}):
