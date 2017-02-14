@@ -125,12 +125,13 @@ class PSSyncCommand(object):
           destination_topic=command_options['--destination-topic'])
 
 
-def kafka_config_from_options(options, command_options={}):
+def kafka_config_from_options(options, command_options=None):
   config = dict()
   
   if '--kafka' in options:
     config['bootstrap.servers'] = ','.join(options['--kafka'])
-  if '--consumer-group' in command_options:
-    config['group.id'] = command_options['--consumer-group']
+  if command_options:
+    if '--consumer-group' in command_options:
+      config['group.id'] = command_options['--consumer-group']
   
   return config
