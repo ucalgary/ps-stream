@@ -58,6 +58,6 @@ class PSSyncPublisher(object):
 
 
 def publish(consumer, producer, source_topics=None, destination_topic=None):
-    publisher = PSSyncPublisher(consumer, producer, source_topics=None, destination_topic=None)
+    publisher = PSSyncPublisher(consumer, producer, source_topics=source_topics, destination_topic=destination_topic)
     print(f'Reading transactions from {source_topics}')
     publisher.run()
