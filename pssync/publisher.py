@@ -24,7 +24,7 @@ class PSSyncPublisher(object):
             elif not message.error():
                 transaction = json.loads(message.value().decode('utf-8'))
 
-                for topic, key, value in messages_from_transaction(transaction):
+                for topic, key, value in self.messages_from_transaction(transaction):
                     print(f'{topic} {key}')
                     # self.producer.produce(topic, value, key)
             elif message.error().code() != KafkaError._PARTITION_EOF:
@@ -34,8 +34,27 @@ class PSSyncPublisher(object):
         print('closing consumer')
         consumer.close()
 
-    def messages_from_transaction(self, transaction):
-        yield None, None, None
+    def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
+        audit_actn = transaction['PSCAMA']['AUDIT_ACTN']
+        assert(audit_actn in ('A', 'C', 'D'))
+
+        for record_type, record_data in transaction.items():
+            if record_type == 'PSCAMA':
+                continue
+            topic = topic_for_record(record_type, record_data, default=self.destination_topic)
+            key = key_for_record(record_type, record_data)
+            value = audit_actn in ('A', 'C') and record_data or None
+            if key and key_serde:
+                key = key_serde(key)
+            if value and value_serde:
+                value = value_serde(value)
+            yield topic, key, value
+
+    def topic_for_record(record_type, record_data, default=None):
+        return default
+
+    def key_for_record(record_type, record_data, default=None):
+        return default
 
 
 def publish(consumer, producer, source_topics=None, destination_topic=None):
