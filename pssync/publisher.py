@@ -35,10 +35,10 @@ class PSSyncPublisher(object):
         self.consumer.close()
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
-        audit_actn = transaction['PSCAMA']['AUDIT_ACTN']
+        audit_actn = transaction['Transaction']['PSCAMA']['AUDIT_ACTN']
         assert(audit_actn in ('A', 'C', 'D'))
 
-        for record_type, record_data in transaction.items():
+        for record_type, record_data in transaction['Transaction'].items():
             if record_type == 'PSCAMA':
                 continue
             topic = self.topic_for_record(record_type, record_data, default=self.destination_topic)
