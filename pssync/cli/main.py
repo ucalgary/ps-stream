@@ -63,7 +63,7 @@ class PSSyncCommand(object):
     Commands:
       collect            Collect PeopleSoft sync messages
       config             Validate and view the collector config
-      parse              Parse sync message streams into record streams
+      publish            Parse transaction messages into record streams
     """
 
     def collect(self, options, command_options):
@@ -101,10 +101,10 @@ class PSSyncCommand(object):
         """
         pass
 
-    def parse(self, options, command_options):
-        """Parse sync message streams into record streams.
+    def publish(self, options, command_options):
+        """Parse transaction messages into record streams.
 
-        Usage: parse [options]
+        Usage: publish [options]
 
         Options:
           --source-topic NAME        Topic to consume sync messages from
