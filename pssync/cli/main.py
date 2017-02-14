@@ -115,7 +115,7 @@ class PSSyncCommand(object):
                                      to a topic based on the consumed message name
           --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
-        config = kafka_config_from_options(options)
+        config = kafka_config_from_options(options, command_options=command_options)
         consumer = Consumer(config)
         producer = Producer(config)
 
