@@ -107,6 +107,7 @@ class PSSyncCommand(object):
 
         Usage: publish [--source-topic=<arg>]...
                        [--destination-topic=<arg>]
+                       [options]
 
         Options:
           --source-topic NAME        Topics to consume sync messages from
