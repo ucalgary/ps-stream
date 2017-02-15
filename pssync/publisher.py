@@ -31,8 +31,7 @@ class PSSyncPublisher(object):
                 transaction = json.loads(message.value().decode('utf-8'))
 
                 for topic, key, value in self.messages_from_transaction(transaction):
-                    print(f'{topic} {key}')
-                    # self.producer.produce(topic, value, key)
+                    self.producer.produce(topic, value, key)
             elif message.error().code() != KafkaError._PARTITION_EOF:
                 print(message.error())
                 self.running = False
