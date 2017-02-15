@@ -59,8 +59,9 @@ class PSSyncPublisher(object):
     def topic_for_record(self, record_type, record_data):
         return self.destination_topic or record_type
 
-    def key_for_record(self, record_type, record_data, default=None):
-        return default
+    def key_for_record(self, record_type, record_data):
+        key_attribute = key_attributes_by_record_name.get(record_type, None)
+        return key_attribute and record_data.get(key_attribute, None)
 
 
 def publish(consumer, producer, source_topics=None, destination_topic=None):
