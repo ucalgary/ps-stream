@@ -31,7 +31,7 @@ class PSSyncPublisher(object):
             message = self.consumer.poll(timeout=30)
 
             if not message:
-                self.running = False
+                continue
             elif not message.error():
                 transaction = json.loads(message.value().decode('utf-8'))
 
