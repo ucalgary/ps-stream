@@ -1,6 +1,8 @@
 import json
 import pkg_resources
 
+from difflib import SequenceMatcher
+
 import yaml
 
 from confluent_kafka import KafkaError
@@ -63,8 +65,15 @@ class PSSyncPublisher(object):
     def topic_for_record(self, record_type, record_data):
         return self.destination_topic or record_type
 
-    def key_for_record(self, record_type, record_data):
+    def key_for_record(self, record_type, record_data, guess=False):
         key_attribute = key_attributes_by_record_name.get(record_type, None)
+        if not key_attribute and guess:
+            keys = record_data.keys()
+            keys = sorted(keys,
+                          key=lambda x: SequenceMatcher(a=record_type, b=x).ratio(),
+                          reverse=True)
+            key_attribute = keys[0]
+            key_attributes_by_record_name[record_type] = key_attribute
         return key_attribute and record_data.get(key_attribute, None)
 
 
