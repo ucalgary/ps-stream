@@ -6,7 +6,8 @@ import yaml
 from confluent_kafka import KafkaError
 
 
-key_attributes_by_record_name = yaml.load(pkg_resources.resource_stream(__name__, 'publisher.yml'))['record keys']
+key_attributes_by_record_name = yaml.load(
+    pkg_resources.resource_stream(__name__, 'publisher.yml'))['record keys']
 
 
 class PSSyncPublisher(object):
@@ -64,6 +65,8 @@ class PSSyncPublisher(object):
 
 
 def publish(consumer, producer, source_topics=None, destination_topic=None):
-    publisher = PSSyncPublisher(consumer, producer, source_topics=source_topics, destination_topic=destination_topic)
+    publisher = PSSyncPublisher(
+        consumer, producer,
+        source_topics=source_topics, destination_topic=destination_topic)
     print(f'Reading transactions from {source_topics}')
     publisher.run()
