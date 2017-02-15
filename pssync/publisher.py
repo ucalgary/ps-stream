@@ -1,6 +1,12 @@
 import json
+import pkg_resources
+
+import yaml
 
 from confluent_kafka import KafkaError
+
+
+key_attributes_by_record_name = yaml.load(pkg_resources.resource_stream(__name__, 'publisher.yml'))['record keys']
 
 
 class PSSyncPublisher(object):
