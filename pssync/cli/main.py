@@ -93,7 +93,6 @@ class PSSyncCommand(object):
           senders=command_options['--senders'],
           recipients=command_options['--recipients'],
           message_names=command_options['--messages'])
-          
 
     def config(self, options, command_options):
         """Validate and view the collector config.
@@ -127,12 +126,12 @@ class PSSyncCommand(object):
 
 
 def kafka_config_from_options(options, command_options=None):
-  config = dict()
-  
-  if '--kafka' in options:
-    config['bootstrap.servers'] = ','.join(options['--kafka'])
-  if command_options:
-    if '--consumer-group' in command_options:
-      config['group.id'] = command_options['--consumer-group']
-  
-  return config
+    config = dict()
+
+    if '--kafka' in options:
+        config['bootstrap.servers'] = ','.join(options['--kafka'])
+    if command_options:
+        if '--consumer-group' in command_options:
+            config['group.id'] = command_options['--consumer-group']
+
+    return config

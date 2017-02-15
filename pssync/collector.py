@@ -40,13 +40,13 @@ class PSSyncCollector(resource.Resource):
 
         psft_message_name = None
         field_types = None
-        
+
         transaction_id = request.getHeader('TransactionID')
         transaction_id_bytes = transaction_id.encode('utf-8')
         orig_time_stamp = request.getHeader('OrigTimeStamp')
 
         # Parse the root element for the PeopleSoft message name and FieldTypes
-        request.content.seek(0,0)
+        request.content.seek(0, 0)
         for event, e in ElementTree.iterparse(request.content, events=('start', 'end')):
             if event == 'start' and psft_message_name is None:
                 psft_message_name = e.tag
@@ -56,13 +56,13 @@ class PSSyncCollector(resource.Resource):
 
         # Rescan for transactions, removing read elements to reduce memory usage
         transaction_index = 1
-        request.content.seek(0,0)
+        request.content.seek(0, 0)
         for event, e in ElementTree.iterparse(request.content, events=('end',)):
             if e.tag == 'Transaction':
                 transaction = element_to_obj(e, wrap_value=False)
                 message = {
                     'TransactionID': transaction_id,
-                    'TransactionIndex' : transaction_index,
+                    'TransactionIndex': transaction_index,
                     'OrigTimeStamp': orig_time_stamp,
                     'CollectTimeStamp': datetime.now(pytz.utc).astimezone().isoformat(),
                     'Transaction': transaction

@@ -7,9 +7,10 @@ def element_text(element):
 
 def element_to_obj(element, map_class=dict, value_f=element_text, wrap_value=True):
     value = None
-    
+
     if len(element) > 0:
-        child_values = map(lambda e: (e.tag, element_to_obj(e, map_class=map_class ,value_f=value_f, wrap_value=False)), element)
+        child_values = map(lambda e: (e.tag, element_to_obj(
+            e, map_class=map_class, value_f=value_f, wrap_value=False)), element)
         value = map_class(child_values)
     else:
         value = value_f(element)
