@@ -7,6 +7,7 @@ from docopt import docopt
 from inspect import getdoc
 
 from .. import collector
+from .. import publisher
 from .docopt_command import DocoptDispatcher
 from .docopt_command import NoSuchCommand
 
@@ -63,7 +64,7 @@ class PSSyncCommand(object):
     Commands:
       collect            Collect PeopleSoft sync messages
       config             Validate and view the collector config
-      parse              Parse sync message streams into record streams
+      publish            Parse transaction messages into record streams
     """
 
     def collect(self, options, command_options):
@@ -92,7 +93,6 @@ class PSSyncCommand(object):
           senders=command_options['--senders'],
           recipients=command_options['--recipients'],
           message_names=command_options['--messages'])
-          
 
     def config(self, options, command_options):
         """Validate and view the collector config.
@@ -101,20 +101,37 @@ class PSSyncCommand(object):
         """
         pass
 
-    def parse(self, options, command_options):
-        """Parse sync message streams into record streams.
+    def publish(self, options, command_options):
+        """Parse transaction messages into record streams.
 
-        Usage: parse [options]
+        Usage: publish [--source-topic=<arg>]...
+                       [--destination-topic=<arg>]
+                       [options]
 
         Options:
-          --source-topic NAME        Topic to consume sync messages from
+          --source-topic NAME        Topics to consume sync messages from
           --destination-topic NAME   Topic to produce record messages to, defaults
                                      to a topic based on the consumed message name
+          --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
-        pass
+        config = kafka_config_from_options(options, command_options=command_options)
+        consumer = Consumer(config)
+        producer = Producer(config)
+
+        publisher.publish(
+          consumer,
+          producer,
+          source_topics=command_options['--source-topic'],
+          destination_topic=command_options['--destination-topic'])
 
 
-def kafka_config_from_options(options):
-  return {
-    'bootstrap.servers': ','.join(options['--kafka'])
-  }
+def kafka_config_from_options(options, command_options=None):
+    config = dict()
+
+    if '--kafka' in options:
+        config['bootstrap.servers'] = ','.join(options['--kafka'])
+    if command_options:
+        if '--consumer-group' in command_options:
+            config['group.id'] = command_options['--consumer-group']
+
+    return config
