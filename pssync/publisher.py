@@ -21,6 +21,10 @@ class PSSyncPublisher(object):
         self.running = True
 
     def run(self):
+        '''Process transactions from the source topics and publish
+        messages representing a stream of PeopleSoft rows organized
+        by record name.
+        '''
         self.consumer.subscribe(self.source_topics)
 
         while self.running:
