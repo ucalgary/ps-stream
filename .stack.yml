@@ -53,5 +53,13 @@ services:
     networks:
       - streaming
 
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui:0.8.1
+    environment:
+      - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
+      - PROXY=true
+    networks:
+      - streaming
+
 networks:
   streaming:
