@@ -16,9 +16,13 @@ setup(
     description='Process PeopleSoft sync messages into Kafka topics',
     author='King Chung Huang',
     packages=find_packages(),
+    package_data={
+        '': ['*.yml']
+    },
     install_requires=install_requires,
     entry_points="""
     [console_scripts]
     pssync=pssync.cli.main:main
-    """
+    """,
+    zip_safe=True
 )
