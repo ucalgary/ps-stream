@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: zookeeper:3.4.9
+    hostname: zookeeper
+    networks:
+      - streaming
+
+  kafka:
+    image: ucalgary/kafka:0.10.1.1
+    hostname: kafka
+    networks:
+      - streaming
+    depends_on:
+      - zookeeper
+
+  kafka-rest:
+    image: ucalgary/kafka-rest:3.1.1
+    hostname: kafka-rest
+    networks:
+      - streaming
+    depends_on:
+      - zookeeper
+      - kafka
+
+  schema-registry:
+    image: ucalgary/schema-registry:3.1.1
+    hostname: schema-registry
+    networks:
+      - streaming
+    depends_on:
+      - zookeeper
+      - kafka
+
+networks:
+  streaming:
