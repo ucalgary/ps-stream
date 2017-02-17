@@ -33,5 +33,25 @@ services:
       - zookeeper
       - kafka
 
+  pssync-collector:
+    image: $IMAGE_DIGEST
+    command:
+      - collect
+      - --topic
+      - $PSSYNC_TRANSACTIONS_TOPIC
+    networks:
+      - streaming
+
+  pssync-publisher:
+    image: $IMAGE_DIGEST
+    command:
+      - publish
+      - --source-topic
+      - $PSSYNC_TRANSACTIONS_TOPIC
+      - --consumer-group
+      - $PSSYNC_CONSUMER_GROUP
+    networks:
+      - streaming
+
 networks:
   streaming:
