@@ -73,14 +73,14 @@ class PSSyncCommand(object):
         """Collect PeopleSoft sync and fullsync messages.
 
         Usage: collect [--port=<arg>] [--topic=<arg>]
-                       [--senders=<arg>]...
-                       [--recipients=<arg>]...
+                       [--accept-from=<arg>]...
+                       [--accept-to=<arg>]...
                        [--messages=<arg>]...
 
         Options:
           --port PORT           Port to listen to messages on [default: 8000]
-          --senders NAMES       Accepted values for the From header
-          --recipients NAMES    Accepted values for the To header
+          --accept-from NAMES   Accepted values for the From header
+          --accept-to NAMES     Accepted values for the To header
           --messages NAMES      Accepted values for the MessageName header
           --topic TOPIC         Produce to a specific Kafka topic, otherwise
                                 messages are sent to topics by message name
@@ -92,8 +92,8 @@ class PSSyncCommand(object):
           producer,
           topic=options['--topic'],
           port=int(options['--port']),
-          senders=options['--senders'],
-          recipients=options['--recipients'],
+          senders=options['--accept-from'],
+          recipients=options['--accept-to'],
           message_names=options['--messages'])
 
     def config(self, options):
