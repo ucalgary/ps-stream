@@ -44,7 +44,8 @@ def dispatch():
 
 def perform_command(options, handler, command_options):
     command = PSSyncCommand()
-    handler(command, options, command_options)
+    options = consolidated_options(options, command_options)
+    handler(command, options)
 
 
 class PSSyncCommand(object):
@@ -67,7 +68,7 @@ class PSSyncCommand(object):
       publish            Parse transaction messages into record streams
     """
 
-    def collect(self, options, command_options):
+    def collect(self, options):
         """Collect PeopleSoft sync and fullsync messages.
 
         Usage: collect [--port=<arg>] [--topic=<arg>]
@@ -88,20 +89,20 @@ class PSSyncCommand(object):
 
         collector.collect(
           producer,
-          topic=command_options['--topic'],
-          port=int(command_options['--port']),
-          senders=command_options['--senders'],
-          recipients=command_options['--recipients'],
-          message_names=command_options['--messages'])
+          topic=options['--topic'],
+          port=int(options['--port']),
+          senders=options['--senders'],
+          recipients=options['--recipients'],
+          message_names=options['--messages'])
 
-    def config(self, options, command_options):
+    def config(self, options):
         """Validate and view the collector config.
 
         Usage: config
         """
         pass
 
-    def publish(self, options, command_options):
+    def publish(self, options):
         """Parse transaction messages into record streams.
 
         Usage: publish [--source-topic=<arg>]...
@@ -114,24 +115,27 @@ class PSSyncCommand(object):
                                      to a topic based on the consumed message name
           --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
-        config = kafka_config_from_options(options, command_options=command_options)
+        config = kafka_config_from_options(options)
         consumer = Consumer(config)
         producer = Producer(config)
 
         publisher.publish(
           consumer,
           producer,
-          source_topics=command_options['--source-topic'],
-          destination_topic=command_options['--destination-topic'])
+          source_topics=options['--source-topic'],
+          destination_topic=options['--destination-topic'])
 
 
-def kafka_config_from_options(options, command_options=None):
+def consolidated_options(options, command_options):
+    return {**options, **command_options}
+
+
+def kafka_config_from_options(options):
     config = dict()
 
     if '--kafka' in options:
         config['bootstrap.servers'] = ','.join(options['--kafka'])
-    if command_options:
-        if '--consumer-group' in command_options:
-            config['group.id'] = command_options['--consumer-group']
+    if '--consumer-group' in options:
+        config['group.id'] = options['--consumer-group']
 
     return config
