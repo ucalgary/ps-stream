@@ -58,7 +58,7 @@ class PSSyncCommand(object):
 
     Options:
       -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
-      -r, --schema-registry URL     Avro schema registry host [default: http://schema-registry:80]
+      -r, --schema-registry URL     Avro schema registry url [default: http://schema-registry:80]
       -p, --topic-prefix PREFIX     String to prepend to all topic names
 
     Commands:
