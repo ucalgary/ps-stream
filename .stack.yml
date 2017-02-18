@@ -39,6 +39,21 @@ services:
       - collect
       - --topic
       - $PSSYNC_TRANSACTIONS_TOPIC
+    labels:
+      traefik.tags: rms-dev
+      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+      traefik.frontend.entryPoints: http,https
+      traefik.protocol: http
+      traefik.port: 8000
+      traefik.docker.network: traefik_rms-dev
+    deploy:
+      labels:
+        traefik.tags: rms-dev
+        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+        traefik.frontend.entryPoints: http,https
+        traefik.protocol: http
+        traefik.port: 8000
+        traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
 
@@ -58,8 +73,25 @@ services:
     environment:
       - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
       - PROXY=true
+    labels:
+      traefik.tags: rms-dev
+      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
+      traefik.frontend.entryPoints: http
+      traefik.protocol: http
+      traefik.port: 8000
+      traefik.docker.network: traefik_rms-dev
+    deploy:
+      labels:
+        traefik.tags: rms-dev
+        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
+        traefik.frontend.entryPoints: http
+        traefik.protocol: http
+        traefik.port: 8000
+        traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
 
 networks:
   streaming:
+  traefik_rms-dev:
+    external: true
