@@ -1,5 +1,6 @@
 import functools
 import logging
+import os
 import sys
 
 from confluent_kafka import Consumer, Producer
@@ -44,7 +45,8 @@ def dispatch():
 
 def perform_command(options, handler, command_options):
     command = PSSyncCommand()
-    handler(command, options, command_options)
+    options = consolidated_options(options, command_options)
+    handler(command, options)
 
 
 class PSSyncCommand(object):
@@ -57,8 +59,8 @@ class PSSyncCommand(object):
       pssync -h|--help
 
     Options:
-      -k, --kafka HOSTS             Kafka brokers [default: kafka:9092]
-      -r, --schema-registry URL     Avro schema registry host [default: http://schema-registry:80]
+      -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
+      -r, --schema-registry URL     Avro schema registry url [default: http://schema-registry:80]
       -p, --topic-prefix PREFIX     String to prepend to all topic names
 
     Commands:
@@ -67,71 +69,77 @@ class PSSyncCommand(object):
       publish            Parse transaction messages into record streams
     """
 
-    def collect(self, options, command_options):
+    def collect(self, options):
         """Collect PeopleSoft sync and fullsync messages.
 
         Usage: collect [--port=<arg>] [--topic=<arg>]
-                       [--senders=<arg>]...
-                       [--recipients=<arg>]...
-                       [--messages=<arg>]...
+                       [--accept-from=<arg>]...
+                       [--accept-to=<arg>]...
+                       [--accept-messagename=<arg>]...
 
         Options:
-          --port PORT           Port to listen to messages on [default: 8000]
-          --senders NAMES       Accepted values for the From header
-          --recipients NAMES    Accepted values for the To header
-          --messages NAMES      Accepted values for the MessageName header
-          --topic TOPIC         Produce to a specific Kafka topic, otherwise
-                                messages are sent to topics by message name
+          --port PORT                 Port to listen to messages on [default: 8000]
+          --accept-from NAMES         Accepted values for the From header
+          --accept-to NAMES           Accepted values for the To header
+          --accept-messagename NAMES  Accepted values for the MessageName header
+          --sink-topic TOPIC          Topic to write transactions to [default: ps-transactions]
         """
         config = kafka_config_from_options(options)
         producer = Producer(config)
 
         collector.collect(
           producer,
-          topic=command_options['--topic'],
-          port=int(command_options['--port']),
-          senders=command_options['--senders'],
-          recipients=command_options['--recipients'],
-          message_names=command_options['--messages'])
+          topic=options['--topic'],
+          port=int(options['--port']),
+          senders=options['--accept-from'],
+          recipients=options['--accept-to'],
+          message_names=options['--accept-messagename'])
 
-    def config(self, options, command_options):
+    def config(self, options):
         """Validate and view the collector config.
 
         Usage: config
         """
         pass
 
-    def publish(self, options, command_options):
+    def publish(self, options):
         """Parse transaction messages into record streams.
 
         Usage: publish [--source-topic=<arg>]...
-                       [--destination-topic=<arg>]
+                       [--sink-topic=<arg>]
                        [options]
 
         Options:
-          --source-topic NAME        Topics to consume sync messages from
-          --destination-topic NAME   Topic to produce record messages to, defaults
-                                     to a topic based on the consumed message name
+          --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
+          --sink-topic NAME          Topic to write records to, defaults to the record type
           --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
-        config = kafka_config_from_options(options, command_options=command_options)
+        config = kafka_config_from_options(options)
         consumer = Consumer(config)
         producer = Producer(config)
 
         publisher.publish(
           consumer,
           producer,
-          source_topics=command_options['--source-topic'],
-          destination_topic=command_options['--destination-topic'])
+          source_topics=options['--source-topic'],
+          destination_topic=options['--sink-topic'])
 
 
-def kafka_config_from_options(options, command_options=None):
+def consolidated_options(options, command_options):
+    environ_option_keys = ((k, 'PSSYNC_' + k.lstrip('-').replace('-', '_').upper())
+                           for k in (*options.keys(), *command_options.keys()))
+    environ_options = {option_key: os.environ[environ_key]
+                       for option_key, environ_key in environ_option_keys
+                       if environ_key in os.environ}
+    return {**environ_options, **options, **command_options}
+
+
+def kafka_config_from_options(options):
     config = dict()
 
     if '--kafka' in options:
         config['bootstrap.servers'] = ','.join(options['--kafka'])
-    if command_options:
-        if '--consumer-group' in command_options:
-            config['group.id'] = command_options['--consumer-group']
+    if '--consumer-group' in options:
+        config['group.id'] = options['--consumer-group']
 
     return config
