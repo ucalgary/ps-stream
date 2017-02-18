@@ -82,8 +82,7 @@ class PSSyncCommand(object):
           --accept-from NAMES         Accepted values for the From header
           --accept-to NAMES           Accepted values for the To header
           --accept-messagename NAMES  Accepted values for the MessageName header
-          --topic TOPIC               Produce to a specific Kafka topic, otherwise
-                                      messages are sent to topics by message name
+          --sink-topic TOPIC          Topic to write transactions to [default: ps-transactions]
         """
         config = kafka_config_from_options(options)
         producer = Producer(config)
@@ -107,13 +106,12 @@ class PSSyncCommand(object):
         """Parse transaction messages into record streams.
 
         Usage: publish [--source-topic=<arg>]...
-                       [--destination-topic=<arg>]
+                       [--sink-topic=<arg>]
                        [options]
 
         Options:
-          --source-topic NAME        Topics to consume sync messages from
-          --destination-topic NAME   Topic to produce record messages to, defaults
-                                     to a topic based on the consumed message name
+          --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
+          --sink-topic NAME          Topic to write records to, defaults to the record type
           --consumer-group GROUP     Kafka consumer group name [default: pssync]
         """
         config = kafka_config_from_options(options)
@@ -124,7 +122,7 @@ class PSSyncCommand(object):
           consumer,
           producer,
           source_topics=options['--source-topic'],
-          destination_topic=options['--destination-topic'])
+          destination_topic=options['--sink-topic'])
 
 
 def consolidated_options(options, command_options):
