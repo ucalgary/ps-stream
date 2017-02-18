@@ -1,5 +1,6 @@
 import functools
 import logging
+import os
 import sys
 
 from confluent_kafka import Consumer, Producer
@@ -127,7 +128,12 @@ class PSSyncCommand(object):
 
 
 def consolidated_options(options, command_options):
-    return {**options, **command_options}
+    environ_option_keys = ((k, 'PSSYNC_' + k.lstrip('-').replace('-', '_').upper())
+                           for k in (*options.keys(), *command_options.keys()))
+    environ_options = {option_key: os.environ[environ_key]
+                       for option_key, environ_key in environ_option_keys
+                       if environ_key in os.environ}
+    return {**environ_options, **options, **command_options}
 
 
 def kafka_config_from_options(options):
