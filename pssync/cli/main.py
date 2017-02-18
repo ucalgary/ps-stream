@@ -75,15 +75,15 @@ class PSSyncCommand(object):
         Usage: collect [--port=<arg>] [--topic=<arg>]
                        [--accept-from=<arg>]...
                        [--accept-to=<arg>]...
-                       [--messages=<arg>]...
+                       [--accept-messagename=<arg>]...
 
         Options:
-          --port PORT           Port to listen to messages on [default: 8000]
-          --accept-from NAMES   Accepted values for the From header
-          --accept-to NAMES     Accepted values for the To header
-          --messages NAMES      Accepted values for the MessageName header
-          --topic TOPIC         Produce to a specific Kafka topic, otherwise
-                                messages are sent to topics by message name
+          --port PORT                 Port to listen to messages on [default: 8000]
+          --accept-from NAMES         Accepted values for the From header
+          --accept-to NAMES           Accepted values for the To header
+          --accept-messagename NAMES  Accepted values for the MessageName header
+          --topic TOPIC               Produce to a specific Kafka topic, otherwise
+                                      messages are sent to topics by message name
         """
         config = kafka_config_from_options(options)
         producer = Producer(config)
@@ -94,7 +94,7 @@ class PSSyncCommand(object):
           port=int(options['--port']),
           senders=options['--accept-from'],
           recipients=options['--accept-to'],
-          message_names=options['--messages'])
+          message_names=options['--accept-messagename'])
 
     def config(self, options):
         """Validate and view the collector config.
