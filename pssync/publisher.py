@@ -1,11 +1,12 @@
 import json
 import pkg_resources
-
 from difflib import SequenceMatcher
+from xml.etree import ElementTree
 
 import yaml
-
 from confluent_kafka import KafkaError
+
+from .utils import element_to_obj
 
 
 key_attributes_by_record_name = yaml.load(
@@ -47,6 +48,10 @@ class PSSyncPublisher(object):
         self.consumer.close()
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
+        transaction['Transaction'] = element_to_obj(
+            ElementTree.fromstring(transaction['Transaction']), wrap_value=False)
+        print(transaction)
+
         audit_actn = transaction['Transaction']['PSCAMA']['AUDIT_ACTN']
         assert(audit_actn in ('A', 'C', 'D'))
 
