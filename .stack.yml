@@ -44,7 +44,7 @@ services:
       traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
       traefik.frontend.entryPoints: http,https
       traefik.protocol: http
-      traefik.port: 8000
+      traefik.port: '8000'
       traefik.docker.network: traefik_rms-dev
     deploy:
       labels:
@@ -52,7 +52,7 @@ services:
         traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
         traefik.frontend.entryPoints: http,https
         traefik.protocol: http
-        traefik.port: 8000
+        traefik.port: '8000'
         traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
@@ -78,7 +78,7 @@ services:
       traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
       traefik.frontend.entryPoints: http
       traefik.protocol: http
-      traefik.port: 8000
+      traefik.port: '8000'
       traefik.docker.network: traefik_rms-dev
     deploy:
       labels:
@@ -86,7 +86,7 @@ services:
         traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
         traefik.frontend.entryPoints: http
         traefik.protocol: http
-        traefik.port: 8000
+        traefik.port: '8000'
         traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
