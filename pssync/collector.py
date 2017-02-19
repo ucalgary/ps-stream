@@ -42,7 +42,6 @@ class PSSyncCollector(resource.Resource):
         field_types = None
 
         transaction_id = request.getHeader('TransactionID')
-        transaction_id_bytes = transaction_id.encode('utf-8')
         orig_time_stamp = request.getHeader('OrigTimeStamp')
 
         # Parse the root element for the PeopleSoft message name and FieldTypes
@@ -68,7 +67,7 @@ class PSSyncCollector(resource.Resource):
                     'Transaction': transaction
                 }
                 message_str = json.dumps(message)
-                self.producer.produce(self.topic, message_str, transaction_id_bytes)
+                self.producer.produce(self.topic, message_str, transaction_id)
                 e.clear()
                 transaction_index += 1
         self.producer.flush()
