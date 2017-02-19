@@ -59,7 +59,7 @@ class PSSyncCollector(resource.Resource):
         request.content.seek(0, 0)
         for event, e in ElementTree.iterparse(request.content, events=('end',)):
             if e.tag == 'Transaction':
-                transaction = element_to_obj(e, wrap_value=False)
+                transaction = ElementTree.tostring(e, encoding='unicode')
                 message = {
                     'TransactionID': transaction_id,
                     'TransactionIndex': transaction_index,
@@ -67,8 +67,8 @@ class PSSyncCollector(resource.Resource):
                     'CollectTimeStamp': datetime.now(pytz.utc).astimezone().isoformat(),
                     'Transaction': transaction
                 }
-                message_bytes = json.dumps(message).encode('utf-8')
-                self.producer.produce(self.topic, message_bytes, transaction_id_bytes)
+                message_str = json.dumps(message)
+                self.producer.produce(self.topic, message_str, transaction_id_bytes)
                 e.clear()
                 transaction_index += 1
         self.producer.flush()
