@@ -41,7 +41,7 @@ services:
       - $PSSYNC_TRANSACTIONS_TOPIC
     labels:
       traefik.tags: rms-dev
-      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
       traefik.frontend.entryPoints: http,https
       traefik.protocol: http
       traefik.port: '8000'
@@ -49,7 +49,7 @@ services:
     deploy:
       labels:
         traefik.tags: rms-dev
-        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
         traefik.frontend.entryPoints: http,https
         traefik.protocol: http
         traefik.port: '8000'
