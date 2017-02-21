@@ -41,7 +41,7 @@ services:
       - $PSSYNC_TRANSACTIONS_TOPIC
     labels:
       traefik.tags: rms-dev
-      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
       traefik.frontend.entryPoints: http,https
       traefik.protocol: http
       traefik.port: '8000'
@@ -49,13 +49,14 @@ services:
     deploy:
       labels:
         traefik.tags: rms-dev
-        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca,PathPrefix:/pssync"
+        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
         traefik.frontend.entryPoints: http,https
         traefik.protocol: http
         traefik.port: '8000'
         traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
+      - traefik_rms-dev
 
   pssync-publisher:
     image: $IMAGE_DIGEST
@@ -73,23 +74,26 @@ services:
     environment:
       - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
       - PROXY=true
-    labels:
-      traefik.tags: rms-dev
-      traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
-      traefik.frontend.entryPoints: http
-      traefik.protocol: http
-      traefik.port: '8000'
-      traefik.docker.network: traefik_rms-dev
-    deploy:
-      labels:
-        traefik.tags: rms-dev
-        traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
-        traefik.frontend.entryPoints: http
-        traefik.protocol: http
-        traefik.port: '8000'
-        traefik.docker.network: traefik_rms-dev
+    # labels:
+    #   traefik.tags: rms-dev
+    #   traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
+    #   traefik.frontend.entryPoints: http,https
+    #   traefik.entryPoints.http.auth.basic.users: '["fscm:$$$$apr1$$$$kK4VhciJ$$$$SWox4YjooFI.WoNQj/hdt0"]'
+    #   traefik.protocol: http
+    #   traefik.port: '8000'
+    #   traefik.docker.network: traefik_rms-dev
+    # deploy:
+    #   labels:
+    #     traefik.tags: rms-dev
+    #     traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca"
+    #     traefik.frontend.entryPoints: http,https
+    #     traefik.entryPoints.http.auth.basic.users: '["fscm:$$$$apr1$$$$kK4VhciJ$$$$SWox4YjooFI.WoNQj/hdt0"]'
+    #     traefik.protocol: http
+    #     traefik.port: '8000'
+    #     traefik.docker.network: traefik_rms-dev
     networks:
       - streaming
+      - traefik_rms-dev
 
 networks:
   streaming:
