@@ -70,7 +70,7 @@ services:
       - streaming
 
   kafka-topics-ui:
-    image: landoop/kafka-topics-ui:0.8.1
+    image: landoop/kafka-topics-ui:0.8.2
     environment:
       - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
       - PROXY=true
