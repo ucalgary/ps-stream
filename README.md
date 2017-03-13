@@ -1,7 +1,6 @@
 # Process PeopleSoft Sync Messages into Kafka Topics
 
-[![](https://images.microbadger.com/badges/image/ucalgary/ps-sync-stream.svg)](https://microbadger.com/images/ucalgary/ps-sync-stream)
-[![Anchore Image Overview](https://anchore.io/service/badges/image/5bdd5f5a6e6066aa5a4c3c99484756d0d0e035793a5c6c763fb349fb1e671e95)](https://anchore.io/image/dockerhub/5bdd5f5a6e6066aa5a4c3c99484756d0d0e035793a5c6c763fb349fb1e671e95?repo=ucalgary%2Fps-sync-stream&tag=latest#overview)
+[![](https://images.microbadger.com/badges/image/ucalgary/ps-stream.svg)](https://microbadger.com/images/ucalgary/ps-stream)
 
 **Note: This project is under development. There is no usable service at this time.**
 
