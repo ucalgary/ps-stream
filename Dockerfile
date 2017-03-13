@@ -9,7 +9,7 @@ RUN apk add --no-cache --virtual .build-deps \
       git \
       musl-dev && \
     pip install -r requirements.txt && \
-		apk del .build-deps
+    apk del .build-deps
 
 COPY setup.py /usr/src/app
 COPY pssync /usr/src/app/pssync
