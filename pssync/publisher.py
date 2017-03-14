@@ -53,6 +53,7 @@ class PSSyncPublisher(object):
     def terminate(self):
         log.info('Terminating')
         self.consumer.close()
+        self.producer.flush()
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
         transaction['Transaction'] = element_to_obj(
