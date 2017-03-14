@@ -1,8 +1,9 @@
-import ujson as json
+import logging
 import pkg_resources
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
 
+import ujson as json
 import yaml
 from confluent_kafka import KafkaError
 
