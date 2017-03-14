@@ -21,7 +21,7 @@ def main():
 
     try:
         command()
-    except (KeyboardInterrupt, signals.ShutdownException):
+    except KeyboardInterrupt:
         log.error('Aborting.')
         sys.exit(1)
     except:
