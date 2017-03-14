@@ -1,4 +1,4 @@
-import json
+import ujson as json
 import pkg_resources
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
