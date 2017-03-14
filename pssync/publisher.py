@@ -1,5 +1,6 @@
 import logging
 import pkg_resources
+import signal
 import sys
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
@@ -33,6 +34,9 @@ class PSSyncPublisher(object):
         messages representing a stream of PeopleSoft rows organized
         by record name.
         '''
+        signal.signal(signal.SIGINT, self.terminate)
+        signal.signal(signal.SIGTERM, self.terminate)
+
         self.consumer.subscribe(self.source_topics)
 
         while self.running:
