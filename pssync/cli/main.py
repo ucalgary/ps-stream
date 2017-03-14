@@ -21,7 +21,7 @@ def main():
 
     try:
         command()
-    except (KeyboardInterrupt, signals.ShutdownException):
+    except KeyboardInterrupt:
         log.error('Aborting.')
         sys.exit(1)
     except:
@@ -40,6 +40,8 @@ def dispatch():
         log.error('No such command: %s\n\n%s', e.command, commands)
         sys.exit(1)
 
+    logging.basicConfig(level=logging.DEBUG if options['--verbose'] else logging.INFO)
+
     return functools.partial(perform_command, options, handler, command_options)
 
 
@@ -55,6 +57,7 @@ class PSSyncCommand(object):
     Usage:
       pssync [--kafka=<arg>]... [--schema-registry=<arg>]
              [--zookeeper=<arg>] [--topic-prefix=<arg>]
+             [--verbose]
              [COMMAND] [ARGS...]
       pssync -h|--help
 
@@ -62,6 +65,7 @@ class PSSyncCommand(object):
       -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
       -r, --schema-registry URL     Avro schema registry url [default: http://schema-registry:80]
       -p, --topic-prefix PREFIX     String to prepend to all topic names
+      --verbose                     Show more output
 
     Commands:
       collect            Collect PeopleSoft sync messages

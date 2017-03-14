@@ -1,12 +1,16 @@
-import ujson as json
+import logging
 import pkg_resources
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
 
+import ujson as json
 import yaml
 from confluent_kafka import KafkaError
 
 from .utils import element_to_obj
+
+
+log = logging.getLogger(__name__)
 
 
 key_attributes_by_record_name = yaml.load(
@@ -44,7 +48,7 @@ class PSSyncPublisher(object):
                 print(message.error())
                 self.running = False
 
-        print('closing consumer')
+        log.info('Terminating')
         self.consumer.close()
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
@@ -53,7 +57,8 @@ class PSSyncPublisher(object):
 
         audit_actn = transaction['Transaction']['PSCAMA']['AUDIT_ACTN']
         if audit_actn not in ('A', 'C', 'D'):
-            print(transaction)
+            log.info('Empty AUDIT_ACTN received')
+            log.debug(transaction)
             return
 
         for record_type, record_data in transaction['Transaction'].items():
@@ -87,5 +92,5 @@ def publish(consumer, producer, source_topics=None, destination_topic=None):
     publisher = PSSyncPublisher(
         consumer, producer,
         source_topics=source_topics, destination_topic=destination_topic)
-    print(f'Reading transactions from {source_topics}')
+    log.info(f'Reading transactions from {source_topics}')
     publisher.run()
