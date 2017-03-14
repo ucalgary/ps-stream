@@ -1,5 +1,7 @@
 import logging
 import pkg_resources
+import signal
+import sys
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
 
@@ -32,10 +34,13 @@ class PSSyncPublisher(object):
         messages representing a stream of PeopleSoft rows organized
         by record name.
         '''
+        signal.signal(signal.SIGINT, self.terminate)
+        signal.signal(signal.SIGTERM, self.terminate)
+
         self.consumer.subscribe(self.source_topics)
 
         while self.running:
-            message = self.consumer.poll(timeout=30)
+            message = self.consumer.poll(timeout=5)
 
             if not message:
                 continue
@@ -48,8 +53,13 @@ class PSSyncPublisher(object):
                 print(message.error())
                 self.running = False
 
+        self.terminate()
+
+    def terminate(self):
         log.info('Terminating')
         self.consumer.close()
+        self.producer.flush()
+        sys.exit(0)
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
         transaction['Transaction'] = element_to_obj(
