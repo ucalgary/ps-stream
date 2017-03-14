@@ -40,7 +40,7 @@ class PSSyncPublisher(object):
         self.consumer.subscribe(self.source_topics)
 
         while self.running:
-            message = self.consumer.poll(timeout=30)
+            message = self.consumer.poll(timeout=5)
 
             if not message:
                 continue
