@@ -48,6 +48,9 @@ class PSSyncPublisher(object):
                 print(message.error())
                 self.running = False
 
+        self.terminate()
+
+    def terminate(self):
         log.info('Terminating')
         self.consumer.close()
 
