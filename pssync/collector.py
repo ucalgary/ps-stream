@@ -1,3 +1,4 @@
+import logging
 import pytz
 from datetime import datetime
 from xml.etree import ElementTree
@@ -7,6 +8,9 @@ from twisted.internet import endpoints, reactor
 from twisted.web import resource, server
 
 from .utils import element_to_obj
+
+
+log = logging.getLogger(__name__)
 
 
 class PSSyncCollector(resource.Resource):
