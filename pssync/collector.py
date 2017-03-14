@@ -36,6 +36,11 @@ class PSSyncCollector(resource.Resource):
         """
         if self.authorize_f and not self.authorize_f(request):
             request.setResponseCode(403, message='Forbidden')
+            log.info('Unauthorized message received')
+            log.debug('To: {}, From: {}, MessageName: {}'.format(
+                request.getHeader('To'),
+                request.getHeader('From'),
+                request.getHeader('MessageName')))
             return 'Message not accepted by collector.'.encode('utf-8')
 
         assert(request.getHeader('DataChunk') == '1')
@@ -92,7 +97,7 @@ def collect(producer, topic=None, port=8000, senders=None, recipients=None, mess
     site = server.Site(collector)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, int(port))
     endpoint.listen(site)
-    print(f'Listening for connections on port {port}')
+    log.info(f'Listening for connections on port {port}')
     reactor.run()
 
 
