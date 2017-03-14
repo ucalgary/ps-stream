@@ -1,5 +1,6 @@
 import logging
 import pkg_resources
+import sys
 from difflib import SequenceMatcher
 from xml.etree import ElementTree
 
@@ -54,6 +55,7 @@ class PSSyncPublisher(object):
         log.info('Terminating')
         self.consumer.close()
         self.producer.flush()
+        sys.exit(0)
 
     def messages_from_transaction(self, transaction, key_serde=json.dumps, value_serde=json.dumps):
         transaction['Transaction'] = element_to_obj(
