@@ -12,7 +12,7 @@ install_requires = [
 
 
 setup(
-    name='pssync',
+    name='ps_stream',
     description='Process PeopleSoft sync messages into Kafka topics',
     author='King Chung Huang',
     packages=find_packages(),
@@ -22,7 +22,7 @@ setup(
     install_requires=install_requires,
     entry_points="""
     [console_scripts]
-    pssync=pssync.cli.main:main
+    pssync=ps_stream.cli.main:main
     """,
     zip_safe=True
 )
