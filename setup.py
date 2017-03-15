@@ -22,7 +22,7 @@ setup(
     install_requires=install_requires,
     entry_points="""
     [console_scripts]
-    pssync=ps_stream.cli.main:main
+    ps-stream=ps_stream.cli.main:main
     """,
     zip_safe=True
 )

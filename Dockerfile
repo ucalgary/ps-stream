@@ -15,7 +15,7 @@ COPY setup.py /usr/src/app
 COPY pssync /usr/src/app/pssync
 RUN python setup.py install
 
-ENTRYPOINT ["/usr/local/bin/pssync"]
+ENTRYPOINT ["/usr/local/bin/ps-stream"]
 CMD ["--help"]
 
 LABEL maintainer="King Chung Huang <kchuang@ucalgary.ca>" \
