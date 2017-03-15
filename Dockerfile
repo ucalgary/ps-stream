@@ -3,17 +3,14 @@ FROM ucalgary/python-librdkafka:3.6.0-0.9.4
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY requirements.txt /usr/src/app
+COPY setup.py /usr/src/app
+COPY ps_stream /usr/src/app/ps_stream
 RUN apk add --no-cache --virtual .build-deps \
       gcc \
       git \
       musl-dev && \
-    pip install -r requirements.txt && \
+    python setup.py install && \
     apk del .build-deps
-
-COPY setup.py /usr/src/app
-COPY ps_stream /usr/src/app/ps_stream
-RUN python setup.py install
 
 ENTRYPOINT ["/usr/local/bin/ps-stream"]
 CMD ["--help"]
