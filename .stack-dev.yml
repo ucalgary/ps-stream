@@ -5,6 +5,6 @@ services:
     ports:
       - 8080:8000
 
-  pssync-collector:
+  ps-collector:
     ports:
       - 8000:8000

@@ -6,14 +6,19 @@ from setuptools import setup
 
 
 install_requires = [
-    'docopt >= 0.6.2',
-    'Twisted >= 16.6.0'
+    'docopt==0.6.2',
+    'Twisted==16.6.0',
+    'PyYAML==3.12',
+    'pytz==2016.10',
+    'confluent-kafka[avro]==0.9.4',
+    'confluent-schema-registry-client==1.1.0',
+    'ujson==1.35'
 ]
 
 
 setup(
-    name='pssync',
-    description='Process PeopleSoft sync messages into Kafka topics',
+    name='ps_stream',
+    description='Process PeopleSoft sync messages into logical streams',
     author='King Chung Huang',
     packages=find_packages(),
     package_data={
@@ -22,7 +27,7 @@ setup(
     install_requires=install_requires,
     entry_points="""
     [console_scripts]
-    pssync=pssync.cli.main:main
+    ps-stream=ps_stream.cli.main:main
     """,
     zip_safe=True
 )

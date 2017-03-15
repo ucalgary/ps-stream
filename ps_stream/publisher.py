@@ -19,7 +19,7 @@ key_attributes_by_record_name = yaml.load(
     pkg_resources.resource_stream(__name__, 'publisher.yml'))['record keys']
 
 
-class PSSyncPublisher(object):
+class PSStreamPublisher(object):
 
     def __init__(self, consumer, producer, source_topics=None, destination_topic=None):
         super().__init__()
@@ -99,7 +99,7 @@ class PSSyncPublisher(object):
 
 
 def publish(consumer, producer, source_topics=None, destination_topic=None):
-    publisher = PSSyncPublisher(
+    publisher = PSStreamPublisher(
         consumer, producer,
         source_topics=source_topics, destination_topic=destination_topic)
     log.info(f'Reading transactions from {source_topics}')

@@ -30,7 +30,7 @@ def main():
 
 def dispatch():
     dispatcher = DocoptDispatcher(
-        PSSyncCommand,
+        PSStreamCommand,
         {'options_first': True})
 
     try:
@@ -46,20 +46,20 @@ def dispatch():
 
 
 def perform_command(options, handler, command_options):
-    command = PSSyncCommand()
+    command = PSStreamCommand()
     options = consolidated_options(options, command_options)
     handler(command, options)
 
 
-class PSSyncCommand(object):
+class PSStreamCommand(object):
     """Process PeopleSoft sync messages into Kafka topics.
 
     Usage:
-      pssync [--kafka=<arg>]... [--schema-registry=<arg>]
-             [--zookeeper=<arg>] [--topic-prefix=<arg>]
-             [--verbose]
-             [COMMAND] [ARGS...]
-      pssync -h|--help
+      ps-stream [--kafka=<arg>]... [--schema-registry=<arg>]
+                [--zookeeper=<arg>] [--topic-prefix=<arg>]
+                [--verbose]
+                [COMMAND] [ARGS...]
+      ps-stream -h|--help
 
     Options:
       -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
@@ -116,7 +116,7 @@ class PSSyncCommand(object):
         Options:
           --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
           --sink-topic NAME          Topic to write records to, defaults to the record type
-          --consumer-group GROUP     Kafka consumer group name [default: pssync]
+          --consumer-group GROUP     Kafka consumer group name [default: ps-stream]
         """
         config = kafka_config_from_options(options)
         consumer = Consumer(config)
@@ -130,7 +130,7 @@ class PSSyncCommand(object):
 
 
 def consolidated_options(options, command_options):
-    environ_option_keys = ((k, 'PSSYNC_' + k.lstrip('-').replace('-', '_').upper())
+    environ_option_keys = ((k, 'PSSTREAM_' + k.lstrip('-').replace('-', '_').upper())
                            for k in (*options.keys(), *command_options.keys()))
     environ_options = {option_key: os.environ[environ_key]
                        for option_key, environ_key in environ_option_keys

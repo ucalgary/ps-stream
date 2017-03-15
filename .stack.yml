@@ -33,12 +33,12 @@ services:
       - zookeeper
       - kafka
 
-  pssync-collector:
+  ps-collector:
     image: $IMAGE_DIGEST
     command:
       - collect
       - --topic
-      - $PSSYNC_TRANSACTIONS_TOPIC
+      - $PSSTREAM_TRANSACTIONS_TOPIC
     labels:
       traefik.tags: rms-dev
       traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
@@ -58,14 +58,14 @@ services:
       - streaming
       - traefik_rms-dev
 
-  pssync-publisher:
+  ps-publisher:
     image: $IMAGE_DIGEST
     command:
       - publish
       - --source-topic
-      - $PSSYNC_TRANSACTIONS_TOPIC
+      - $PSSTREAM_TRANSACTIONS_TOPIC
       - --consumer-group
-      - $PSSYNC_CONSUMER_GROUP
+      - $PSSTREAM_CONSUMER_GROUP
     networks:
       - streaming
 
