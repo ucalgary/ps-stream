@@ -116,7 +116,7 @@ class PSStreamCommand(object):
         Options:
           --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
           --sink-topic NAME          Topic to write records to, defaults to the record type
-          --consumer-group GROUP     Kafka consumer group name [default: pssync]
+          --consumer-group GROUP     Kafka consumer group name [default: ps-stream]
         """
         config = kafka_config_from_options(options)
         consumer = Consumer(config)
