@@ -12,7 +12,7 @@ RUN apk add --no-cache --virtual .build-deps \
     apk del .build-deps
 
 COPY setup.py /usr/src/app
-COPY pssync /usr/src/app/pssync
+COPY ps_stream /usr/src/app/ps_stream
 RUN python setup.py install
 
 ENTRYPOINT ["/usr/local/bin/ps-stream"]
