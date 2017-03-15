@@ -33,7 +33,7 @@ services:
       - zookeeper
       - kafka
 
-  pssync-collector:
+  ps-collector:
     image: $IMAGE_DIGEST
     command:
       - collect
@@ -58,7 +58,7 @@ services:
       - streaming
       - traefik_rms-dev
 
-  pssync-publisher:
+  ps-publisher:
     image: $IMAGE_DIGEST
     command:
       - publish
