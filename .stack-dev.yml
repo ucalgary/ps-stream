@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  kafka-topics-ui:
+    ports:
+      - 8080:8000
+
+  pssync-collector:
+    ports:
+      - 8000:8000
