@@ -6,8 +6,13 @@ from setuptools import setup
 
 
 install_requires = [
-    'docopt >= 0.6.2',
-    'Twisted >= 16.6.0'
+    'docopt==0.6.2',
+    'Twisted==16.6.0',
+    'PyYAML==3.12',
+    'pytz==2016.10',
+    'confluent-kafka[avro]==0.9.4',
+    'confluent-schema-registry-client==1.1.0',
+    'ujson==1.35'
 ]
 
 
