@@ -30,7 +30,7 @@ def main():
 
 def dispatch():
     dispatcher = DocoptDispatcher(
-        PSSyncCommand,
+        PSStreamCommand,
         {'options_first': True})
 
     try:
@@ -46,12 +46,12 @@ def dispatch():
 
 
 def perform_command(options, handler, command_options):
-    command = PSSyncCommand()
+    command = PSStreamCommand()
     options = consolidated_options(options, command_options)
     handler(command, options)
 
 
-class PSSyncCommand(object):
+class PSStreamCommand(object):
     """Process PeopleSoft sync messages into Kafka topics.
 
     Usage:

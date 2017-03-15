@@ -13,7 +13,7 @@ from .utils import element_to_obj
 log = logging.getLogger(__name__)
 
 
-class PSSyncCollector(resource.Resource):
+class PSStreamCollector(resource.Resource):
 
     isLeaf = True
 
@@ -93,7 +93,7 @@ def collect(producer, topic=None, port=8000, senders=None, recipients=None, mess
             return False
         return True
 
-    collector = PSSyncCollector(producer, topic=topic, authorize_f=authorize_request)
+    collector = PSStreamCollector(producer, topic=topic, authorize_f=authorize_request)
     site = server.Site(collector)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, int(port))
     endpoint.listen(site)
