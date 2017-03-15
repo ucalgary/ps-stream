@@ -18,7 +18,7 @@ install_requires = [
 
 setup(
     name='ps_stream',
-    description='Process PeopleSoft sync messages into Kafka topics',
+    description='Process PeopleSoft sync messages into logical streams',
     author='King Chung Huang',
     packages=find_packages(),
     package_data={
