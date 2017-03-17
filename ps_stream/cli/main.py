@@ -92,7 +92,7 @@ class PSStreamCommand(object):
 
         collector.collect(
           producer,
-          topic=options['--target-topic'],
+          topic=prefix_topics(options['--target-prefix'], (options['--target-topic'],)),
           port=int(options['--port']),
           senders=options['--accept-from'],
           recipients=options['--accept-to'],
@@ -126,8 +126,8 @@ class PSStreamCommand(object):
         publisher.publish(
           consumer,
           producer,
-          source_topics=options['--source-topic'],
-          destination_topic=options['--target-topic'])
+          source_topics=prefix_topics(options['--source-prefix'], options['--source-topic']),
+          destination_topic=prefix_topics(options['--target-prefix'], options['--target-topic']))
 
 
 def consolidated_options(options, command_options):
@@ -148,3 +148,12 @@ def kafka_config_from_options(options):
         config['group.id'] = options['--consumer-group']
 
     return config
+
+
+def prefix_topics(prefix, topics):
+    if prefix:
+        if not isinstance(topics, basestring):
+            return ['%s.%s'.format(prefix, topic) for topic in topics]
+        else:
+            return '%s.%s'.format(prefix, topics)
+    return topics
