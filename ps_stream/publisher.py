@@ -86,7 +86,11 @@ class PSStreamPublisher(object):
             yield topic, key, value
 
     def topic_for_record(self, record_type, record_data):
-        return self.target_topic or record_type
+        if self.target_topic:
+            return self.target_topic
+        elif self.target_prefix:
+            return f'{self.target_prefix}.{record_type}'
+        return record_type
 
     def key_for_record(self, record_type, record_data, guess=False):
         key_format = key_formats_by_record_type.get(record_type, None)
