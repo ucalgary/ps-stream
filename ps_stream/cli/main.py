@@ -91,7 +91,7 @@ class PSStreamCommand(object):
 
         collector.collect(
           producer,
-          topic=prefix_topics(options['--target-prefix'], (options['--target-topic'],)),
+          topic=prefix_topics(options['--target-prefix'], options['--target-topic']),
           port=int(options['--port']),
           senders=options['--accept-from'],
           recipients=options['--accept-to'],
