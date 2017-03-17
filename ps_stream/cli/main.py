@@ -30,7 +30,7 @@ def main():
 
 def dispatch():
     dispatcher = DocoptDispatcher(
-        PSCommand,
+        PSStreamCommand,
         {'options_first': True})
 
     try:
