@@ -126,7 +126,8 @@ class PSStreamCommand(object):
           consumer,
           producer,
           source_topics=prefix_topics(options['--source-prefix'], options['--source-topic']),
-          target_topic=prefix_topics(options['--target-prefix'], options['--target-topic']))
+          target_topic=prefix_topics(options['--target-prefix'], options['--target-topic']),
+          target_prefix=options['--target-prefix'])
 
 
 def consolidated_options(options, command_options):
