@@ -37,7 +37,7 @@ services:
     image: $IMAGE_DIGEST
     command:
       - collect
-      - --topic
+      - --target-topic
       - $PSSTREAM_TRANSACTIONS_TOPIC
     labels:
       traefik.tags: rms-dev
