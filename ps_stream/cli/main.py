@@ -151,6 +151,8 @@ def kafka_config_from_options(options):
 
 
 def prefix_topics(prefix, topics):
+    if not topics:
+        return topics
     if prefix:
         if not isinstance(topics, basestring):
             return ['%s.%s'.format(prefix, topic) for topic in topics]
