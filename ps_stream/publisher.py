@@ -79,6 +79,7 @@ class PSStreamPublisher(object):
             topic = self.topic_for_record(record_type, record_data)
             key = self.key_for_record(record_type, record_data)
             value = audit_actn in ('A', 'C') and record_data or None
+            log.debug(f'Producing to topic {topic} with key {key}')
             if key and key_serde:
                 key = key_serde(key)
             if value and value_serde:
