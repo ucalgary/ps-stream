@@ -11,7 +11,6 @@ install_requires = [
     'PyYAML==3.12',
     'pytz==2016.10',
     'confluent-kafka==0.9.4',
-    'confluent-schema-registry-client==1.1.0',
     'ujson==1.35'
 ]
 
