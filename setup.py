@@ -11,7 +11,12 @@ install_requires = [
     'PyYAML==3.12',
     'pytz==2016.10',
     'confluent-kafka==0.9.4',
-    'ujson==1.35'
+    'ujson==1.35',
+    'docopt_utils==0.0.0'
+]
+
+dependency_links = [
+    'https://github.com/ucalgary/docopt-utils/archive/master.zip#egg=docopt_utils-0.0.0',
 ]
 
 
@@ -24,6 +29,7 @@ setup(
         '': ['*.yml']
     },
     install_requires=install_requires,
+    dependency_links=dependency_links,
     entry_points="""
     [console_scripts]
     ps-stream=ps_stream.cli.main:main
