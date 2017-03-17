@@ -86,14 +86,14 @@ class PSStreamCommand(object):
           --accept-from NAMES         Accepted values for the From header
           --accept-to NAMES           Accepted values for the To header
           --accept-messagename NAMES  Accepted values for the MessageName header
-          --sink-topic TOPIC          Topic to write transactions to [default: ps-transactions]
+          --target-topic TOPIC        Topic to write transactions to [default: ps-transactions]
         """
         config = kafka_config_from_options(options)
         producer = Producer(config)
 
         collector.collect(
           producer,
-          topic=options['--topic'],
+          topic=options['--target-topic'],
           port=int(options['--port']),
           senders=options['--accept-from'],
           recipients=options['--accept-to'],
@@ -110,12 +110,12 @@ class PSStreamCommand(object):
         """Parse transaction messages into record streams.
 
         Usage: publish [--source-topic=<arg>]...
-                       [--sink-topic=<arg>]
+                       [--target-topic=<arg>]
                        [options]
 
         Options:
           --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
-          --sink-topic NAME          Topic to write records to, defaults to the record type
+          --target-topic NAME        Topic to write records to, defaults to the record type
           --consumer-group GROUP     Kafka consumer group name [default: ps-stream]
         """
         config = kafka_config_from_options(options)
@@ -126,7 +126,7 @@ class PSStreamCommand(object):
           consumer,
           producer,
           source_topics=options['--source-topic'],
-          destination_topic=options['--sink-topic'])
+          destination_topic=options['--target-topic'])
 
 
 def consolidated_options(options, command_options):
