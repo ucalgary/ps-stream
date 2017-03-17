@@ -11,8 +11,11 @@ log = logging.getLogger(__name__)
 
 
 def main():
+    def set_logging_level(handler, options):
+        logging.basicConfig(level=logging.DEBUG if options['--verbose'] else logging.INFO)
+
     command_classes = {'__root__': PSStreamCommand}
-    dispatch(command_classes, env='PSSTREAM')
+    dispatch(command_classes, env='PSSTREAM', before_f=set_logging_level)
 
 
 class PSStreamCommand(object):
