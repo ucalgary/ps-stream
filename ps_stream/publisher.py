@@ -7,6 +7,7 @@ from xml.etree import ElementTree
 
 import ujson as json
 import yaml
+from confluent_kafka import Consumer, Producer
 from confluent_kafka import KafkaError
 
 from .utils import element_to_obj
@@ -106,7 +107,9 @@ class PSStreamPublisher(object):
         return key_format and key_format.format(**record_data)
 
 
-def publish(consumer, producer, source_topics=None, target_topic=None, target_prefix=None):
+def publish(config, source_topics=None, target_topic=None, target_prefix=None):
+    consumer = Consumer(config)
+    producer = Producer(config)
     publisher = PSStreamPublisher(
         consumer, producer,
         source_topics=source_topics, target_topic=target_topic, target_prefix=target_prefix)

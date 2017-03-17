@@ -4,6 +4,7 @@ from datetime import datetime
 from xml.etree import ElementTree
 
 import ujson as json
+from confluent_kafka import Producer
 from twisted.internet import endpoints, reactor
 from twisted.web import resource, server
 
@@ -83,7 +84,7 @@ class PSStreamCollector(resource.Resource):
         return '{"status":"POST ok"}'.encode('utf-8')
 
 
-def collect(producer, topic=None, port=8000, senders=None, recipients=None, message_names=None):
+def collect(config, topic=None, port=8000, senders=None, recipients=None, message_names=None):
     def authorize_request(request):
         if senders and not request.getHeader('To') in senders:
             return False
@@ -93,6 +94,7 @@ def collect(producer, topic=None, port=8000, senders=None, recipients=None, mess
             return False
         return True
 
+    producer = Producer(config)
     collector = PSStreamCollector(producer, topic=topic, authorize_f=authorize_request)
     site = server.Site(collector)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, int(port))
