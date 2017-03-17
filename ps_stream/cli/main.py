@@ -1,53 +1,21 @@
-import functools
 import logging
-import os
 import sys
-
-from docopt import docopt
-from inspect import getdoc
 
 from .. import collector
 from .. import publisher
-from .docopt_command import DocoptDispatcher
-from .docopt_command import NoSuchCommand
+
+from docopt_utils.dispatcher import dispatch
 
 
 log = logging.getLogger(__name__)
 
 
 def main():
-    command = dispatch()
+    def set_logging_level(handler, options):
+        logging.basicConfig(level=logging.DEBUG if options['--verbose'] else logging.INFO)
 
-    try:
-        command()
-    except KeyboardInterrupt:
-        log.error('Aborting.')
-        sys.exit(1)
-    except:
-        sys.exit(1)
-
-
-def dispatch():
-    dispatcher = DocoptDispatcher(
-        PSStreamCommand,
-        {'options_first': True})
-
-    try:
-        options, handler, command_options = dispatcher.parse(sys.argv[1:])
-    except NoSuchCommand as e:
-        commands = '\n'.join(parse_doc_section('commands:', getdoc(e.supercommand)))
-        log.error('No such command: %s\n\n%s', e.command, commands)
-        sys.exit(1)
-
-    logging.basicConfig(level=logging.DEBUG if options['--verbose'] else logging.INFO)
-
-    return functools.partial(perform_command, options, handler, command_options)
-
-
-def perform_command(options, handler, command_options):
-    command = PSStreamCommand()
-    options = consolidated_options(options, command_options)
-    handler(command, options)
+    command_classes = {'__root__': PSStreamCommand}
+    dispatch(command_classes, env='PSSTREAM', before_f=set_logging_level)
 
 
 class PSStreamCommand(object):
@@ -123,15 +91,6 @@ class PSStreamCommand(object):
           source_topics=prefix_topics(options['--source-prefix'], options['--source-topic']),
           target_topic=prefix_topics(options['--target-prefix'], options['--target-topic']),
           target_prefix=options['--target-prefix'])
-
-
-def consolidated_options(options, command_options):
-    environ_option_keys = ((k, 'PSSTREAM_' + k.lstrip('-').replace('-', '_').upper())
-                           for k in (*options.keys(), *command_options.keys()))
-    environ_options = {option_key: os.environ[environ_key]
-                       for option_key, environ_key in environ_option_keys
-                       if environ_key in os.environ}
-    return {**environ_options, **options, **command_options}
 
 
 def kafka_config_from_options(options):
