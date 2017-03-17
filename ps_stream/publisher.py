@@ -21,12 +21,12 @@ key_formats_by_record_type = yaml.load(
 
 class PSStreamPublisher(object):
 
-    def __init__(self, consumer, producer, source_topics=None, destination_topic=None):
+    def __init__(self, consumer, producer, source_topics=None, target_topic=None):
         super().__init__()
         self.consumer = consumer
         self.producer = producer
         self.source_topics = source_topics
-        self.destination_topic = destination_topic
+        self.target_topic = target_topic
         self.running = True
 
     def run(self):
@@ -84,7 +84,7 @@ class PSStreamPublisher(object):
             yield topic, key, value
 
     def topic_for_record(self, record_type, record_data):
-        return self.destination_topic or record_type
+        return self.target_topic or record_type
 
     def key_for_record(self, record_type, record_data, guess=False):
         key_format = key_formats_by_record_type.get(record_type, None)
@@ -99,9 +99,9 @@ class PSStreamPublisher(object):
         return key_format and key_format.format(**record_data)
 
 
-def publish(consumer, producer, source_topics=None, destination_topic=None):
+def publish(consumer, producer, source_topics=None, target_topic=None):
     publisher = PSStreamPublisher(
         consumer, producer,
-        source_topics=source_topics, destination_topic=destination_topic)
+        source_topics=source_topics, target_topic=target_topic)
     log.info(f'Reading transactions from {source_topics}')
     publisher.run()
