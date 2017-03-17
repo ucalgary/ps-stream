@@ -108,8 +108,15 @@ class PSStreamPublisher(object):
 
 
 def publish(config, source_topics=None, target_topic=None, target_prefix=None):
-    consumer = Consumer(config)
-    producer = Producer(config)
+    consumer_config = {**config, ** {
+        'default.topic.config': {
+            'auto.offset.reset': 'smallest',
+            'auto.commit.interval.ms': 5000
+        }
+    }}
+    producer_config = config
+    consumer = Consumer(consumer_config)
+    producer = Producer(producer_config)
     publisher = PSStreamPublisher(
         consumer, producer,
         source_topics=source_topics, target_topic=target_topic, target_prefix=target_prefix)
