@@ -154,7 +154,7 @@ def prefix_topics(prefix, topics):
     if not topics:
         return topics
     if prefix:
-        if not isinstance(topics, basestring):
+        if not isinstance(topics, str):
             return ['%s.%s'.format(prefix, topic) for topic in topics]
         else:
             return '%s.%s'.format(prefix, topics)
