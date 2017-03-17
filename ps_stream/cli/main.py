@@ -55,14 +55,13 @@ class PSStreamCommand(object):
     """Process PeopleSoft sync messages into Kafka topics.
 
     Usage:
-      ps-stream [--kafka=<arg>]... [--schema-registry=<arg>] [--zookeeper=<arg>]
+      ps-stream [--kafka=<arg>]...
                 [--verbose]
                 [COMMAND] [ARGS...]
       ps-stream -h|--help
 
     Options:
       -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
-      -r, --schema-registry URL     Avro schema registry url [default: http://schema-registry:80]
       --verbose                     Show more output
 
     Commands:
