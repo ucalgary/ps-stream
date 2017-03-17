@@ -3,7 +3,6 @@ import logging
 import os
 import sys
 
-from confluent_kafka import Consumer, Producer
 from docopt import docopt
 from inspect import getdoc
 
@@ -87,10 +86,9 @@ class PSStreamCommand(object):
           --target-topic TOPIC        Topic to write transactions to [default: transactions]
         """
         config = kafka_config_from_options(options)
-        producer = Producer(config)
 
         collector.collect(
-          producer,
+          config,
           topic=prefix_topics(options['--target-prefix'], options['--target-topic']),
           port=int(options['--port']),
           senders=options['--accept-from'],
@@ -119,12 +117,9 @@ class PSStreamCommand(object):
           --consumer-group GROUP     Kafka consumer group name [default: ps-stream]
         """
         config = kafka_config_from_options(options)
-        consumer = Consumer(config)
-        producer = Producer(config)
 
         publisher.publish(
-          consumer,
-          producer,
+          config,
           source_topics=prefix_topics(options['--source-prefix'], options['--source-topic']),
           target_topic=prefix_topics(options['--target-prefix'], options['--target-topic']),
           target_prefix=options['--target-prefix'])
