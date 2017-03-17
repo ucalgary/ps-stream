@@ -55,8 +55,7 @@ class PSStreamCommand(object):
     """Process PeopleSoft sync messages into Kafka topics.
 
     Usage:
-      ps-stream [--kafka=<arg>]... [--schema-registry=<arg>]
-                [--zookeeper=<arg>] [--topic-prefix=<arg>]
+      ps-stream [--kafka=<arg>]... [--schema-registry=<arg>] [--zookeeper=<arg>]
                 [--verbose]
                 [COMMAND] [ARGS...]
       ps-stream -h|--help
@@ -64,7 +63,6 @@ class PSStreamCommand(object):
     Options:
       -k, --kafka HOSTS             Kafka bootstrap hosts [default: kafka:9092]
       -r, --schema-registry URL     Avro schema registry url [default: http://schema-registry:80]
-      -p, --topic-prefix PREFIX     String to prepend to all topic names
       --verbose                     Show more output
 
     Commands:
@@ -76,7 +74,7 @@ class PSStreamCommand(object):
     def collect(self, options):
         """Collect PeopleSoft sync and fullsync messages.
 
-        Usage: collect [--port=<arg>] [--topic=<arg>]
+        Usage: collect [--port=<arg>] [--target-prefix=<arg>] [--target-topic=<arg>]
                        [--accept-from=<arg>]...
                        [--accept-to=<arg>]...
                        [--accept-messagename=<arg>]...
@@ -86,14 +84,15 @@ class PSStreamCommand(object):
           --accept-from NAMES         Accepted values for the From header
           --accept-to NAMES           Accepted values for the To header
           --accept-messagename NAMES  Accepted values for the MessageName header
-          --sink-topic TOPIC          Topic to write transactions to [default: ps-transactions]
+          --target-prefix PREFIX      Prefix name for target topic [default: ps]
+          --target-topic TOPIC        Topic to write transactions to [default: transactions]
         """
         config = kafka_config_from_options(options)
         producer = Producer(config)
 
         collector.collect(
           producer,
-          topic=options['--topic'],
+          topic=prefix_topics(options['--target-prefix'], (options['--target-topic'],)),
           port=int(options['--port']),
           senders=options['--accept-from'],
           recipients=options['--accept-to'],
@@ -109,13 +108,15 @@ class PSStreamCommand(object):
     def publish(self, options):
         """Parse transaction messages into record streams.
 
-        Usage: publish [--source-topic=<arg>]...
-                       [--sink-topic=<arg>]
+        Usage: publish [--source-prefix=<arg>] [--source-topic=<arg>]...
+                       [--target-prefix=<arg>] [--target-topic=<arg>]
                        [options]
 
         Options:
-          --source-topic NAME        Topics to consume transactions from [default: ps-transactions]
-          --sink-topic NAME          Topic to write records to, defaults to the record type
+          --source-prefix PREFIX     Prefix string for source topics [default: ps]
+          --source-topic NAME        Topics to consume transactions from [default: transactions]
+          --target-prefix PREFIX     Prefix name for target topics [default: ps]
+          --target-topic NAME        Topic to write records to, defaults to the record type
           --consumer-group GROUP     Kafka consumer group name [default: ps-stream]
         """
         config = kafka_config_from_options(options)
@@ -125,8 +126,8 @@ class PSStreamCommand(object):
         publisher.publish(
           consumer,
           producer,
-          source_topics=options['--source-topic'],
-          destination_topic=options['--sink-topic'])
+          source_topics=prefix_topics(options['--source-prefix'], options['--source-topic']),
+          target_topic=prefix_topics(options['--target-prefix'], options['--target-topic']))
 
 
 def consolidated_options(options, command_options):
@@ -147,3 +148,14 @@ def kafka_config_from_options(options):
         config['group.id'] = options['--consumer-group']
 
     return config
+
+
+def prefix_topics(prefix, topics):
+    if not topics:
+        return topics
+    if prefix:
+        if not isinstance(topics, str):
+            return [f'{prefix}.{topic}' for topic in topics]
+        else:
+            return f'{prefix}.{topics}'
+    return topics

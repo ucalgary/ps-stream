@@ -37,8 +37,6 @@ services:
     image: $IMAGE_DIGEST
     command:
       - collect
-      - --topic
-      - $PSSTREAM_TRANSACTIONS_TOPIC
     labels:
       traefik.tags: rms-dev
       traefik.frontend.rule: "Host:${COMPOSE_PROJECT_NAME}.rms-dev.ucalgary.ca;PathPrefix:/pssync"
@@ -62,10 +60,6 @@ services:
     image: $IMAGE_DIGEST
     command:
       - publish
-      - --source-topic
-      - $PSSTREAM_TRANSACTIONS_TOPIC
-      - --consumer-group
-      - $PSSTREAM_CONSUMER_GROUP
     networks:
       - streaming
 
