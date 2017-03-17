@@ -10,8 +10,7 @@ install_requires = [
     'Twisted==16.6.0',
     'PyYAML==3.12',
     'pytz==2016.10',
-    'confluent-kafka[avro]==0.9.4',
-    'confluent-schema-registry-client==1.1.0',
+    'confluent-kafka==0.9.4',
     'ujson==1.35'
 ]
 
