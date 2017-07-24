@@ -69,8 +69,8 @@ class PSStreamPublisher(object):
             ElementTree.fromstring(transaction['Transaction']), wrap_value=False)
 
         audit_actn = transaction['Transaction']['PSCAMA']['AUDIT_ACTN']
-        if audit_actn not in ('A', 'C', 'D'):
-            log.info('Empty AUDIT_ACTN received')
+        if audit_actn is not None and audit_actn not in ('A', 'C', 'D', 'K', 'N', 'O'):
+            log.info('Invalid AUDIT_ACTN received')
             log.debug(transaction)
             return
 
