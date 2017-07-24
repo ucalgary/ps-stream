@@ -69,8 +69,8 @@ class PSStreamPublisher(object):
             ElementTree.fromstring(transaction['Transaction']), wrap_value=False)
 
         audit_actn = transaction['Transaction']['PSCAMA']['AUDIT_ACTN']
-        if audit_actn not in ('A', 'C', 'D'):
-            log.info('Empty AUDIT_ACTN received')
+        if audit_actn is not None and audit_actn not in ('A', 'C', 'D', 'K', 'N', 'O'):
+            log.info('Invalid AUDIT_ACTN received')
             log.debug(transaction)
             return
 
@@ -79,7 +79,7 @@ class PSStreamPublisher(object):
                 continue
             topic = self.topic_for_record(record_type, record_data)
             key = self.key_for_record(record_type, record_data)
-            value = audit_actn in ('A', 'C') and record_data or None
+            value = audit_actn in (None, 'A', 'C') and record_data or None
             log.debug(f'Producing to topic {topic} with key {key}')
             if key and key_serde:
                 key = key_serde(key)
