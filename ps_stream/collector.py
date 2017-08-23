@@ -57,8 +57,8 @@ class PSStreamCollector(resource.Resource):
         request.content.seek(0, 0)
         for event, e in ElementTree.iterparse(request.content, events=('start', 'end')):
             if event == 'start' and psft_message_name is None:
-                psft_message_name = e.tag
-            elif event == 'end' and e.tag == 'FieldTypes':
+                psft_message_name = e.tag.split('}', 1)[-1]
+            elif event == 'end' and e.tag.split('}', 1)[-1] == 'FieldTypes':
                 field_types = element_to_obj(e, value_f=field_type)
                 break
 
@@ -66,7 +66,7 @@ class PSStreamCollector(resource.Resource):
         transaction_index = 1
         request.content.seek(0, 0)
         for event, e in ElementTree.iterparse(request.content, events=('end',)):
-            if e.tag == 'Transaction':
+            if e.tag.split('}', 1)[-1] == 'Transaction':
                 transaction = ElementTree.tostring(e, encoding='unicode')
                 message = {
                     'TransactionID': transaction_id,
