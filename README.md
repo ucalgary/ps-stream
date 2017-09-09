@@ -18,6 +18,12 @@ Collect PeopleSoft sync messages.
 $ docker run -p 8000:8000 -d ucalgary/ps-stream collect
 ```
 
+## Test Drive
+
+You can quickly deploy ps-stream on Play with Docker, a community-run Docker playground, by clicking the following button.
+
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/ucalgary/ps-stream/master/docker-compose.yml&stack_name=ps-stream)
+
 ## Maintenance
 
 This repository and image are currently maintained by the Research Management Systems project at the [University of Calgary](http://www.ucalgary.ca/).
