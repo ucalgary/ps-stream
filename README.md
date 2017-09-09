@@ -24,6 +24,8 @@ You can quickly deploy ps-stream on Play with Docker, a community-run Docker pla
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/ucalgary/ps-stream/master/docker-compose.yml&stack_name=ps-stream)
 
+After starting the demo, try `POST`ing a PeopleSoft rowset-based message to the collector on port 8000, then using kafka-topics-ui on port 8001 to see the message in a Kafka topic.
+
 ## Maintenance
 
 This repository and image are currently maintained by the Research Management Systems project at the [University of Calgary](http://www.ucalgary.ca/).
