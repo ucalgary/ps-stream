@@ -2,13 +2,13 @@ version: '3'
 
 services:
   zookeeper:
-    image: zookeeper:3.4.9
+    image: confluentinc/cp-zookeeper:3.3.0
     hostname: zookeeper
     networks:
       - streaming
 
   kafka:
-    image: ucalgary/kafka:0.10.2.0
+    image: confluentinc/cp-kafka:3.3.0
     hostname: kafka
     networks:
       - streaming
@@ -16,7 +16,7 @@ services:
       - zookeeper
 
   kafka-rest:
-    image: ucalgary/kafka-rest:3.2.0
+    image: confluentinc/cp-kakfa-rest:3.3.0
     hostname: kafka-rest
     networks:
       - streaming
@@ -25,7 +25,7 @@ services:
       - kafka
 
   schema-registry:
-    image: ucalgary/schema-registry:3.2.0
+    image: confluentinc/cp-schema-registry:3.3.0
     hostname: schema-registry
     networks:
       - streaming
