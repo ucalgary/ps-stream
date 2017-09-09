@@ -16,7 +16,7 @@ services:
       - zookeeper
 
   kafka-rest:
-    image: confluentinc/cp-kakfa-rest:3.3.0
+    image: confluentinc/cp-kafka-rest:3.3.0
     hostname: kafka-rest
     environment:
       - ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT="*"
