@@ -1,4 +1,4 @@
-FROM ucalgary/python-librdkafka:3.6.0-0.9.4
+FROM ucalgary/python-librdkafka:3.6.2-0.11.0
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
