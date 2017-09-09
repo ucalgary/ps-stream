@@ -44,6 +44,8 @@ services:
     image: ucalgary/ps-stream
     command:
       - collect
+    ports:
+      - 8000:8000
     networks:
       - streaming
 
@@ -59,6 +61,8 @@ services:
     environment:
       - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
       - PROXY=true
+    ports:
+      - 8001:8000
     networks:
       - streaming
 
