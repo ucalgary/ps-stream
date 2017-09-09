@@ -34,7 +34,7 @@ services:
       - kafka
 
   ps-collector:
-    image: $IMAGE_DIGEST
+    image: ucalgary/ps-stream
     command:
       - collect
     labels:
@@ -57,7 +57,7 @@ services:
       - traefik_rms-dev
 
   ps-publisher:
-    image: $IMAGE_DIGEST
+    image: ucalgary/ps-stream
     command:
       - publish
     networks:
