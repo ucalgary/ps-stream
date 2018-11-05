@@ -10,7 +10,7 @@ install_requires = [
     'Twisted==16.6.0',
     'PyYAML==3.12',
     'pytz==2016.10',
-    'confluent-kafka==0.9.4',
+    'confluent-kafka==0.11.5',
     'ujson==1.35',
     'docopt_utils==0.0.0'
 ]
